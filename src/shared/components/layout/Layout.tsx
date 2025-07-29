@@ -2,6 +2,8 @@ import styles from './Layout.module.css';
 
 import { Link, useNavigate } from 'react-router-dom';
 
+import { Bell } from 'lucide-react';
+
 export default function Layout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
 
@@ -11,16 +13,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <h1 className={styles.LayoutHeaderTitle} onClick={() => navigate('/')}>
           AIMinder
         </h1>
-        <div>
-          <Link to="/notification">알림</Link>
-        </div>
+        <Link to="/notification" className={styles.LayoutBellContainer}>
+          <Bell size={24} className={styles.LayoutBellIcon} />
+          <span className={styles.LayoutBellDot} />
+        </Link>
       </header>
       {children}
       <nav className={styles.LayoutNav}>
-        <Link to="/">Home</Link>
-        <Link to="/goal">Goal</Link>
-        <Link to="/ai-assistant">Ai Assistant</Link>
-        <Link to="/login">Login</Link>
+        <Link to="/" className={styles.LayoutNavLink}>
+          Home
+        </Link>
+        <Link to="/goal" className={styles.LayoutNavLink}>
+          Goal
+        </Link>
+        <Link to="/ai-assistant" className={styles.LayoutNavLink}>
+          Ai Assistant
+        </Link>
+        <Link to="/login" className={styles.LayoutNavLink}>
+          Login
+        </Link>
       </nav>
     </main>
   );
