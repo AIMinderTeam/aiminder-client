@@ -1,0 +1,57 @@
+.GoalSection {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.GoalStatusContainer {
+  display: flex;
+  gap: 10px;
+  background-color: #f0f0f0;
+}
+
+.GoalStatusItem {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+}
+
+.GoalStatusItemActive {
+  background-color: #000;
+  color: #fff;
+}
+
+.GoalListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.GoalItem {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #000;
+}
+
+.GoalItemTitle {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.FloatingButton {
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #000;
+  color: #fff;
+  z-index: 99;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
