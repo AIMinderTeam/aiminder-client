@@ -15,7 +15,6 @@ env:
   EC2_HOST: ${{ secrets.DEVELOP_EC2_HOST }}
   DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
   DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
-  APPLICATION_ENV: ${{ secrets.APPLICATION_ENV }}
 
 jobs:
   build-and-deploy:
