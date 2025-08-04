@@ -31,13 +31,6 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: Upload Test Reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-reports
-          path: build/reports/tests/test
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
