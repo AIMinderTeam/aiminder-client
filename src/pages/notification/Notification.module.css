@@ -12,7 +12,7 @@ ul.NotificationList {
 
 li.NotificationItem {
   border-top: 1px solid #e0e0e0;
-  padding: 16px;
+  padding: 16px 20px;
 
   display: flex;
   flex-direction: column;
@@ -32,7 +32,7 @@ li.NotificationItem:last-child {
 .NotificationItemTitle {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .NotificationItemTitleText {
