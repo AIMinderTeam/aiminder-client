@@ -1,9 +1,11 @@
-import DetailView from './pages/goal/DetailView';
-
 import React, { Suspense } from 'react';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
-import Layout from '@/shared/components/layout/Layout';
+import AiAssistantLayout from '@/pages/ai-assistant/components/layout/AiAssistantLayout';
+import GoalLayout from '@/pages/goal/components/layout/GoalLayout';
+import DetailView from '@/pages/goal/DetailView';
+import HomeLayout from '@/pages/home/components/layout/HomeLayout';
+import NotificationLayout from '@/pages/notification/components/layout/NotificationLayout';
 
 const Login = React.lazy(() => import('@/pages/login/Login'));
 const Home = React.lazy(() => import('@/pages/home/Home'));
@@ -24,17 +26,17 @@ function App() {
         {
           path: '',
           element: (
-            <Layout>
+            <GoalLayout>
               <Goal />
-            </Layout>
+            </GoalLayout>
           ),
         },
         {
           path: ':goalId',
           element: (
-            <Layout>
+            <GoalLayout>
               <DetailView />
-            </Layout>
+            </GoalLayout>
           ),
         },
       ],
@@ -42,25 +44,25 @@ function App() {
     {
       path: '/ai-assistant',
       element: (
-        <Layout>
+        <AiAssistantLayout>
           <AiAssistant />
-        </Layout>
+        </AiAssistantLayout>
       ),
     },
     {
       path: '/notification',
       element: (
-        <Layout>
+        <NotificationLayout>
           <Notification />
-        </Layout>
+        </NotificationLayout>
       ),
     },
     {
       path: '/',
       element: (
-        <Layout>
+        <HomeLayout>
           <Home />
-        </Layout>
+        </HomeLayout>
       ),
     },
 

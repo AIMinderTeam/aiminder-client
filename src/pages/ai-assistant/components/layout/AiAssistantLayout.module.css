@@ -1,4 +1,4 @@
-.LayoutHeader {
+.AiAssistantLayoutHeader {
   position: sticky;
   top: 0;
   left: 0;
@@ -10,36 +10,22 @@
   background-color: #fff;
 }
 
-/* Home Header */
-.LayoutHeaderTitle {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1;
-  color: var(--color-primary);
-}
-
-/* Notification Header */
-.LayoutSubHeaderTitle {
+.AiAssistantLayoutHeaderTitle {
   font-size: 20px;
   font-weight: 600;
   line-height: 1;
 }
 
-.LayoutBellContainer {
+.AiAssistantLayoutHeaderButton {
   position: relative;
 }
-.LayoutBellIcon {
+
+.AiAssistantLayoutBellIcon {
   color: rgb(138, 138, 138);
   fill: rgb(138, 138, 138);
 }
 
-.LayoutHeaderButtonContainer {
-  border: none;
-  background-color: transparent;
-  padding: 0;
-}
-
-.LayoutBellDot {
+.AiAssistantLayoutBellDot {
   width: 8px;
   height: 8px;
   background-color: red;
@@ -49,7 +35,7 @@
   right: 1px;
 }
 
-.LayoutNav {
+.AiAssistantLayoutNav {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -67,7 +53,7 @@
   box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.2);
 }
 
-.LayoutNavLink {
+.AiAssistantLayoutNavLink {
   text-decoration: none;
   font-size: 14px;
   font-weight: 600;
