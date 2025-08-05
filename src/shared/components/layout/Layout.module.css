@@ -40,6 +40,9 @@
   right: 0;
   padding: 20px;
 
+  z-index: 100;
+  background-color: #fff;
+
   display: flex;
   justify-content: space-between;
 
