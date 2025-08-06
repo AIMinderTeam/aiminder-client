@@ -9,6 +9,7 @@ import GoalLayout from '@/pages/goal/components/layout/GoalLayout';
 import DetailView from '@/pages/goal/DetailView';
 import HomeLayout from '@/pages/home/components/layout/HomeLayout';
 import NotificationLayout from '@/pages/notification/components/layout/NotificationLayout';
+import LoadingPage from '@/shared/components/spinner/loading-page';
 
 const Login = React.lazy(() => import('@/pages/login/Login'));
 const Home = React.lazy(() => import('@/pages/home/Home'));
@@ -85,6 +86,10 @@ function App() {
         </HomeLayout>
       ),
     },
+    {
+      path: '/loading',
+      element: <LoadingPage />,
+    },
 
     // {
     //   path: URL.USER_MANAGEMENT,
@@ -117,7 +122,7 @@ function App() {
   ]);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<LoadingPage />}>
       <RouterProvider router={router} />
     </Suspense>
   );
