@@ -1,6 +1,7 @@
 import styles from './Home.module.css';
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import dayjs from 'dayjs';
 import { Check, ChevronDown } from 'lucide-react';
@@ -11,7 +12,7 @@ const currentTimelineProgress = 4;
 
 export default function Home() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+  const navigate = useNavigate();
   const testCurrentDate = dayjs();
   const startDayOfMonth = testCurrentDate.startOf('month').day();
 
@@ -185,6 +186,9 @@ export default function Home() {
                         key={item.id}
                         className={styles.HomeTimelineItemContentItem}
                         data-complete={item.isCompleted}
+                        onClick={() => {
+                          navigate(`/daily-goal/${item.id}`);
+                        }}
                       >
                         <button
                           className={styles.HomeTimelineItemContentItemIcon}

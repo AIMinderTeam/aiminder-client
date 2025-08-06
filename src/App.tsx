@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
 import AiAssistantLayout from '@/pages/ai-assistant/components/layout/AiAssistantLayout';
+import DailyGoalLayout from '@/pages/daily-goal/components/layout/DailyGoalLayout';
 import GoalLayout from '@/pages/goal/components/layout/GoalLayout';
 import DetailView from '@/pages/goal/DetailView';
 import HomeLayout from '@/pages/home/components/layout/HomeLayout';
@@ -12,6 +13,7 @@ const Home = React.lazy(() => import('@/pages/home/Home'));
 const Goal = React.lazy(() => import('@/pages/goal/Goal'));
 const AiAssistant = React.lazy(() => import('@/pages/ai-assistant/AiAssistant'));
 const Notification = React.lazy(() => import('@/pages/notification/Notification'));
+const DailyGoal = React.lazy(() => import('@/pages/daily-goal/DailyGoal'));
 
 function App() {
   const router = createBrowserRouter([
@@ -55,6 +57,14 @@ function App() {
         <NotificationLayout>
           <Notification />
         </NotificationLayout>
+      ),
+    },
+    {
+      path: '/daily-goal/:dailyGoalId',
+      element: (
+        <DailyGoalLayout>
+          <DailyGoal />
+        </DailyGoalLayout>
       ),
     },
     {
