@@ -9,7 +9,7 @@ export default function AiAssistant() {
   return (
     <section className={styles.AiAssistantSection}>
       <ul className={styles.AiAssistantList}>
-        <li className={styles.AiAssistantItem}>
+        <li className={styles.AiAssistantItem} onClick={() => navigate('/ai-assistant/new')}>
           <div className={styles.AiAssistantItemImage}>
             <Plus />
           </div>

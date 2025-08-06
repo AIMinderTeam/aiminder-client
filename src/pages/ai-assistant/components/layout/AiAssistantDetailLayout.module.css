@@ -16,6 +16,8 @@
   border: none;
   background-color: transparent;
   padding: 0;
+  width: 24px;
+  height: 24px;
 }
 
 .AiAssistantDetailLayoutTitle {
