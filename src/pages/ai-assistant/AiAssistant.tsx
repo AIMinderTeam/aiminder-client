@@ -1,8 +1,11 @@
 import styles from './AiAssistant.module.css';
 
+import { useNavigate } from 'react-router-dom';
+
 import { ChevronRight, Plus } from 'lucide-react';
 
 export default function AiAssistant() {
+  const navigate = useNavigate();
   return (
     <section className={styles.AiAssistantSection}>
       <ul className={styles.AiAssistantList}>
@@ -16,7 +19,7 @@ export default function AiAssistant() {
             <span className={styles.AiAssistantItemTime}>AI로 설정한 내용은 본인의 목표로 저장됩니다.</span>
           </div>
         </li>
-        <li className={styles.AiAssistantItem}>
+        <li className={styles.AiAssistantItem} onClick={() => navigate('/ai-assistant/1')}>
           <div className={styles.AiAssistantItemImage}>이미지</div>
           <div className={styles.AiAssistantItemContent}>
             <span className={styles.AiAssistantItemTitle}>5kg 빼기</span>
@@ -29,7 +32,7 @@ export default function AiAssistant() {
             <ChevronRight />
           </div>
         </li>
-        <li className={styles.AiAssistantItem}>
+        <li className={styles.AiAssistantItem} onClick={() => navigate('/ai-assistant/2')}>
           <div className={styles.AiAssistantItemImage}>이미지</div>
           <div className={styles.AiAssistantItemContent}>
             <span className={styles.AiAssistantItemTitle}>AI 비서 출시</span>

@@ -1,7 +1,9 @@
 import React, { Suspense } from 'react';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
+import AiAssistantDetailLayout from '@/pages/ai-assistant/components/layout/AiAssistantDetailLayout';
 import AiAssistantLayout from '@/pages/ai-assistant/components/layout/AiAssistantLayout';
+import AIAssistantDetail from '@/pages/ai-assistant/detail/AIAssistantDetail';
 import DailyGoalLayout from '@/pages/daily-goal/components/layout/DailyGoalLayout';
 import GoalLayout from '@/pages/goal/components/layout/GoalLayout';
 import DetailView from '@/pages/goal/DetailView';
@@ -49,6 +51,14 @@ function App() {
         <AiAssistantLayout>
           <AiAssistant />
         </AiAssistantLayout>
+      ),
+    },
+    {
+      path: '/ai-assistant/:aiAssistantId',
+      element: (
+        <AiAssistantDetailLayout>
+          <AIAssistantDetail />
+        </AiAssistantDetailLayout>
       ),
     },
     {
