@@ -17,32 +17,6 @@ const goalData = {
 const maxTimelineProgress = 10;
 const currentTimelineProgress = 4;
 
-const goalItemList = [
-  {
-    id: 1,
-    title: '유산소 30분 (걷기/러닝)',
-    endDate: '2025-08-01',
-    isCompleted: true,
-  },
-  {
-    id: 2,
-    title: '식단 사진 기록 (세끼)',
-    endDate: '2025-08-02',
-    isCompleted: false,
-  },
-  {
-    id: 3,
-    title: '유튜브 운동 영상 따라하기 (40분)',
-    endDate: '2025-08-03',
-    isCompleted: false,
-  },
-  {
-    id: 4,
-    title: '2L 이상 수분 섭취',
-    endDate: '2025-08-04',
-    isCompleted: false,
-  },
-];
 const listData = [
   {
     dailyGoalDate: '2025-08-11',
