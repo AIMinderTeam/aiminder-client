@@ -31,11 +31,16 @@ const GoalList = [
 export default function Goal() {
   const [goalStatus, setGoalStatus] = React.useState<string>(GoalStatus.PENDING);
   const navigate = useNavigate();
+
   return (
     <section className={styles.GoalSection}>
       <button className={styles.FloatingButton}>
         <Plus />
       </button>
+      <div>
+        <button onClick={() => navigate('/ai-assistant/new')}>AI 목표 생성</button>
+        <button onClick={() => navigate('/ai-assistant/new/directly')}>직접 목표 생성</button>
+      </div>
       <div className={styles.GoalStatusContainer}>
         <div
           className={classNames(styles.GoalStatusItem, {

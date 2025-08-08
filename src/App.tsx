@@ -2,11 +2,13 @@ import React, { Suspense } from 'react';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
 import AiAssistantDetailLayout from '@/pages/ai-assistant/components/layout/AiAssistantDetailLayout';
+import AiAssistantDirectlyFormLayout from '@/pages/ai-assistant/components/layout/AiAssistantDirectlyFormLayout';
 import AiAssistantLayout from '@/pages/ai-assistant/components/layout/AiAssistantLayout';
 import AIAssistantDetail from '@/pages/ai-assistant/detail/AIAssistantDetail';
+import AiAssistantDirectlyForm from '@/pages/ai-assistant/detail/AiAssistantDirectlyForm';
 import DailyGoalLayout from '@/pages/daily-goal/components/layout/DailyGoalLayout';
 import GoalLayout from '@/pages/goal/components/layout/GoalLayout';
-import DetailView from '@/pages/goal/DetailView';
+import DetailView from '@/pages/goal/detail/GoalDetail';
 import HomeLayout from '@/pages/home/components/layout/HomeLayout';
 import NotificationLayout from '@/pages/notification/components/layout/NotificationLayout';
 import LoadingPage from '@/shared/components/spinner/loading-page';
@@ -60,6 +62,14 @@ function App() {
         <AiAssistantDetailLayout>
           <AIAssistantDetail />
         </AiAssistantDetailLayout>
+      ),
+    },
+    {
+      path: '/ai-assistant/new/directly',
+      element: (
+        <AiAssistantDirectlyFormLayout>
+          <AiAssistantDirectlyForm />
+        </AiAssistantDirectlyFormLayout>
       ),
     },
     {
