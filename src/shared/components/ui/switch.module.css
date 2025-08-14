@@ -1,0 +1,127 @@
+.switchContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  user-select: none;
+}
+
+.switch {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border-radius: 20px;
+  background-color: #e5e7eb;
+  border: 2px solid transparent;
+}
+
+.switch:hover:not(.disabled) {
+  background-color: #d1d5db;
+}
+
+.switch.checked {
+  background-color: #3b82f6;
+}
+
+.switch.checked:hover:not(.disabled) {
+  background-color: #2563eb;
+}
+
+.switch.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.switch:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.track {
+  position: relative;
+  display: flex;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+}
+
+.thumb {
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+  left: 2px;
+}
+
+/* 크기별 스타일 */
+.small .track {
+  width: 32px;
+  height: 16px;
+}
+
+.small .thumb {
+  width: 12px;
+  height: 12px;
+}
+
+.small.checked .thumb {
+  transform: translateX(16px);
+}
+
+.medium .track {
+  width: 44px;
+  height: 22px;
+}
+
+.medium .thumb {
+  width: 16px;
+  height: 16px;
+}
+
+.medium.checked .thumb {
+  transform: translateX(22px);
+}
+
+.large .track {
+  width: 56px;
+  height: 28px;
+}
+
+.large .thumb {
+  width: 20px;
+  height: 20px;
+}
+
+.large.checked .thumb {
+  transform: translateX(28px);
+}
+
+/* 다크 모드 지원 */
+@media (prefers-color-scheme: dark) {
+  .label {
+    color: #d1d5db;
+  }
+
+  .switch {
+    background-color: #4b5563;
+  }
+
+  .switch:hover:not(.disabled) {
+    background-color: #6b7280;
+  }
+
+  .switch.checked {
+    background-color: #60a5fa;
+  }
+
+  .switch.checked:hover:not(.disabled) {
+    background-color: #3b82f6;
+  }
+}
