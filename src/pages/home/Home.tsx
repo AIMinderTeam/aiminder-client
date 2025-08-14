@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import dayjs from 'dayjs';
-import { Check, ChevronDown } from 'lucide-react';
+import { Check, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const days = ['일', '월', '화', '수', '목', '금', '토'];
 const maxTimelineProgress = 10;
@@ -13,8 +13,11 @@ const currentTimelineProgress = 4;
 export default function Home() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
-  const testCurrentDate = dayjs();
+  const [testCurrentDate, setTestCurrentDate] = useState(dayjs());
   const startDayOfMonth = testCurrentDate.startOf('month').day();
+
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  console.log(selectedDate.format('YYYY-MM-DD'));
 
   const [homeTimelineList, setHomeTimelineList] = useState([
     {
@@ -84,7 +87,7 @@ export default function Home() {
     monthDates.push({
       day: i,
       isCurrentMonth: true,
-      isToday: i === testCurrentDate.date(),
+      isToday: testCurrentDate.isSame(dayjs(), 'month') && i === dayjs().date(),
     });
   }
 
@@ -107,9 +110,25 @@ export default function Home() {
     );
   };
 
+  const handleMonthNavigation = (type: 'prev' | 'next') => {
+    if (type === 'prev') {
+      setTestCurrentDate(testCurrentDate.subtract(1, 'month'));
+    } else {
+      setTestCurrentDate(testCurrentDate.add(1, 'month'));
+    }
+  };
+
   return (
     <section className={styles.HomeSection}>
-      <div className={styles.HomeTitle}>{testCurrentDate.format('YYYY년 M월')}</div>
+      <div className={styles.HomeTitle}>
+        <button className={styles.HomeMonthNavigationButton} onClick={() => handleMonthNavigation('prev')}>
+          <ChevronLeft />
+        </button>
+        <span className={styles.HomeTitleText}>{testCurrentDate.format('YYYY년 M월')}</span>
+        <button className={styles.HomeMonthNavigationButton} onClick={() => handleMonthNavigation('next')}>
+          <ChevronRight />
+        </button>
+      </div>
 
       {/* 이번 주 달력 */}
       <div className={styles.HomeCalendarWeeksContainer}>
@@ -126,9 +145,13 @@ export default function Home() {
           ? monthDates.map((date, index) => (
               <div
                 key={'month' + index}
+                data-selected={selectedDate.isSame(testCurrentDate.set('date', Number(date.day)), 'day')}
                 className={styles.HomeCalendarItem}
                 data-today={date.isToday}
                 data-current-month={date.isCurrentMonth}
+                onClick={() => {
+                  setSelectedDate(testCurrentDate.set('date', Number(date.day)));
+                }}
               >
                 <span className={styles.HomeCalendarItemNumber}>{date.day}</span>
               </div>
@@ -136,9 +159,13 @@ export default function Home() {
           : weekDates.map((date, index) => (
               <div
                 key={'week' + index}
+                data-selected={selectedDate.isSame(testCurrentDate.set('date', Number(date.day)), 'day')}
                 className={styles.HomeCalendarItem}
                 data-today={date.isToday}
                 data-current-month={date.isCurrentMonth}
+                onClick={() => {
+                  setSelectedDate(testCurrentDate.set('date', Number(date.day)));
+                }}
               >
                 <span className={styles.HomeCalendarItemNumber}>{date.day}</span>
               </div>

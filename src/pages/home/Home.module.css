@@ -7,6 +7,18 @@
 .HomeTitle {
   font-size: 20px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.HomeMonthNavigationButton {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  width: 24px;
+  height: 24px;
 }
 
 .HomeCalendarWeeksContainer {
@@ -71,6 +83,11 @@
 
 .HomeCalendarItem[data-today='true'] {
   background-color: #000;
+  color: #fff;
+}
+
+.HomeCalendarItem[data-selected='true'] {
+  background-color: #f69d58;
   color: #fff;
 }
 

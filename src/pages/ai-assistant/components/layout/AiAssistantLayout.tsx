@@ -2,6 +2,7 @@ import styles from './AiAssistantLayout.module.css';
 
 import { Link, useNavigate } from 'react-router-dom';
 
+import Navigation from '@/shared/components/layout/navigation';
 import { Bell } from 'lucide-react';
 
 export default function AiAssistantLayout({ children }: { children: React.ReactNode }) {
@@ -20,20 +21,7 @@ export default function AiAssistantLayout({ children }: { children: React.ReactN
       </header>
       {children}
 
-      <nav className={styles.AiAssistantLayoutNav}>
-        <Link to="/" className={styles.AiAssistantLayoutNavLink}>
-          Home
-        </Link>
-        <Link to="/goal" className={styles.AiAssistantLayoutNavLink}>
-          Goal
-        </Link>
-        <Link to="/ai-assistant" className={styles.AiAssistantLayoutNavLink}>
-          Ai Assistant
-        </Link>
-        <Link to="/login" className={styles.AiAssistantLayoutNavLink}>
-          Login
-        </Link>
-      </nav>
+      <Navigation />
     </main>
   );
 }

@@ -2,6 +2,7 @@ import styles from './HomeLayout.module.css';
 
 import { Link, useNavigate } from 'react-router-dom';
 
+import Navigation from '@/shared/components/layout/navigation';
 import { Bell } from 'lucide-react';
 
 export default function HomeLayout({ children }: { children: React.ReactNode }) {
@@ -20,20 +21,7 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
       </header>
       {children}
 
-      <nav className={styles.HomeLayoutNav}>
-        <Link to="/" className={styles.HomeLayoutNavLink}>
-          Home
-        </Link>
-        <Link to="/goal" className={styles.HomeLayoutNavLink}>
-          Goal
-        </Link>
-        <Link to="/ai-assistant" className={styles.HomeLayoutNavLink}>
-          Ai Assistant
-        </Link>
-        <Link to="/login" className={styles.HomeLayoutNavLink}>
-          Login
-        </Link>
-      </nav>
+      <Navigation />
     </main>
   );
 }

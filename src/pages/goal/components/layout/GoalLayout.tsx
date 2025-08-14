@@ -2,6 +2,7 @@ import styles from './GoalLayout.module.css';
 
 import { Link, useNavigate } from 'react-router-dom';
 
+import Navigation from '@/shared/components/layout/navigation';
 import { Bell } from 'lucide-react';
 
 export default function GoalLayout({ children }: { children: React.ReactNode }) {
@@ -20,20 +21,7 @@ export default function GoalLayout({ children }: { children: React.ReactNode }) 
       </header>
       {children}
 
-      <nav className={styles.GoalLayoutNav}>
-        <Link to="/" className={styles.GoalLayoutNavLink}>
-          Home
-        </Link>
-        <Link to="/goal" className={styles.GoalLayoutNavLink}>
-          Goal
-        </Link>
-        <Link to="/ai-assistant" className={styles.GoalLayoutNavLink}>
-          Ai Assistant
-        </Link>
-        <Link to="/login" className={styles.GoalLayoutNavLink}>
-          Login
-        </Link>
-      </nav>
+      <Navigation />
     </main>
   );
 }
