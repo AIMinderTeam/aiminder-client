@@ -10,6 +10,12 @@ import DailyGoalLayout from '@/pages/daily-goal/components/layout/DailyGoalLayou
 import GoalLayout from '@/pages/goal/components/layout/GoalLayout';
 import DetailView from '@/pages/goal/detail/GoalDetail';
 import HomeLayout from '@/pages/home/components/layout/HomeLayout';
+import MypageLayout from '@/pages/mypage/components/layout/MypageLayout';
+import Logout from '@/pages/mypage/logout/Logout';
+import Mypage from '@/pages/mypage/Mypage';
+import MypageNotification from '@/pages/mypage/notification/Notification';
+import Review from '@/pages/mypage/review/Review';
+import Withdrawal from '@/pages/mypage/withdrawal/Withdrawal';
 import NotificationLayout from '@/pages/notification/components/layout/NotificationLayout';
 import LoadingPage from '@/shared/components/spinner/loading-page';
 
@@ -88,6 +94,53 @@ function App() {
         </DailyGoalLayout>
       ),
     },
+    {
+      path: '/mypage',
+      element: <Outlet />,
+      children: [
+        {
+          path: '',
+          element: (
+            <MypageLayout>
+              <Mypage />
+            </MypageLayout>
+          ),
+        },
+        {
+          path: 'review',
+          element: (
+            <MypageLayout>
+              <Review />
+            </MypageLayout>
+          ),
+        },
+        {
+          path: 'notification',
+          element: (
+            <MypageLayout>
+              <MypageNotification />
+            </MypageLayout>
+          ),
+        },
+        {
+          path: 'logout',
+          element: (
+            <MypageLayout>
+              <Logout />
+            </MypageLayout>
+          ),
+        },
+        {
+          path: 'withdrawal',
+          element: (
+            <MypageLayout>
+              <Withdrawal />
+            </MypageLayout>
+          ),
+        },
+      ],
+    },
+
     {
       path: '/',
       element: (
