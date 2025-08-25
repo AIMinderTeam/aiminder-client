@@ -1,0 +1,104 @@
+.AiAssistantDetailSection {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.AiAssistantDetailMessageContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+  margin-bottom: 100px;
+  font-size: 14px;
+}
+
+.AiAssistantDetailMessageAiChatContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 76dvw;
+}
+
+.AiAssistantDetailMessageAiChatContent {
+  border: 1px solid #e0e0e0;
+  padding: 10px;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+  background-color: #f0f0f0;
+}
+
+.AiAssistantDetailMessageAiChatTime {
+  font-size: 12px;
+  color: #666;
+}
+
+.AiAssistantDetailMessageAiChatOptionContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.AiAssistantDetailMessageAiChatOption {
+  padding: 10px;
+  border-radius: 32px;
+  background-color: #a4a4a4;
+  color: #fff;
+  padding: 10px 20px;
+  font-weight: 500;
+}
+
+.AiAssistantDetailMessageUserChatContainer {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-end;
+  gap: 2px;
+  max-width: 76dvw;
+}
+
+.AiAssistantDetailMessageUserChatContent {
+  border: 1px solid #f9cd8a;
+  padding: 10px;
+  border-radius: 10px;
+  border-top-right-radius: 0;
+  background-color: #ffddaa;
+  align-self: flex-end;
+}
+
+.AiAssistantDetailMessageUserChatTime {
+  font-size: 12px;
+  color: #666;
+  align-self: flex-end;
+}
+
+.AiAssistantDetailInputContainer {
+  border: 1px solid #e0e0e0;
+  background-color: #fff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.AiAssistantDetailInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #f0f0f0;
+}
+
+.AiAssistantDetailInputSendButton {
+  border: none;
+  background-color: transparent;
+  width: 40px;
+  height: 40px;
+}

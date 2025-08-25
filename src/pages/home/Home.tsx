@@ -1,17 +1,60 @@
 import styles from './Home.module.css';
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import dayjs from 'dayjs';
-import { ChevronDown } from 'lucide-react';
+import { Check, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const days = ['일', '월', '화', '수', '목', '금', '토'];
+const maxTimelineProgress = 10;
+const currentTimelineProgress = 4;
 
 export default function Home() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  const testCurrentDate = dayjs('2025-08-04');
+  const navigate = useNavigate();
+  const [testCurrentDate, setTestCurrentDate] = useState(dayjs());
   const startDayOfMonth = testCurrentDate.startOf('month').day();
+
+  const [selectedDate, setSelectedDate] = useState(dayjs());
+  console.log(selectedDate.format('YYYY-MM-DD'));
+
+  const [homeTimelineList, setHomeTimelineList] = useState([
+    {
+      id: 1,
+      goal: '5kg 빼기',
+      endDate: dayjs('2025-12-31'),
+      items: [
+        {
+          id: '1-1',
+          title: '유산소 30분 (걷기/러닝)',
+          isCompleted: false,
+        },
+        {
+          id: '1-2',
+          title: '무산소 30분 (팔굽혀펴기/팔꿈치 펴기)',
+          isCompleted: false,
+        },
+      ],
+    },
+    {
+      id: 2,
+      goal: 'AI 비서 출시',
+      endDate: dayjs('2025-12-31'),
+      items: [
+        {
+          id: '2-1',
+          title: '와이어프레임 완성',
+          isCompleted: true,
+        },
+        {
+          id: '2-2',
+          title: '프론트엔드 개발',
+          isCompleted: false,
+        },
+      ],
+    },
+  ]);
 
   // 이번 주의 날짜들을 계산
   const weekDates = Array.from({ length: 7 }).map((_, index) => {
@@ -44,13 +87,48 @@ export default function Home() {
     monthDates.push({
       day: i,
       isCurrentMonth: true,
-      isToday: i === testCurrentDate.date(),
+      isToday: testCurrentDate.isSame(dayjs(), 'month') && i === dayjs().date(),
     });
   }
 
+  const handleTimelineItemComplete = (itemId: number, contentId: string) => {
+    setHomeTimelineList(
+      homeTimelineList.map((item) => {
+        if (item.id === itemId) {
+          return {
+            ...item,
+            items: item.items.map((item) => {
+              if (item.id === contentId) {
+                return { ...item, isCompleted: !item.isCompleted };
+              }
+              return item;
+            }),
+          };
+        }
+        return item;
+      }),
+    );
+  };
+
+  const handleMonthNavigation = (type: 'prev' | 'next') => {
+    if (type === 'prev') {
+      setTestCurrentDate(testCurrentDate.subtract(1, 'month'));
+    } else {
+      setTestCurrentDate(testCurrentDate.add(1, 'month'));
+    }
+  };
+
   return (
     <section className={styles.HomeSection}>
-      <div className={styles.HomeTitle}>{testCurrentDate.format('YYYY년 M월')}</div>
+      <div className={styles.HomeTitle}>
+        <button className={styles.HomeMonthNavigationButton} onClick={() => handleMonthNavigation('prev')}>
+          <ChevronLeft />
+        </button>
+        <span className={styles.HomeTitleText}>{testCurrentDate.format('YYYY년 M월')}</span>
+        <button className={styles.HomeMonthNavigationButton} onClick={() => handleMonthNavigation('next')}>
+          <ChevronRight />
+        </button>
+      </div>
 
       {/* 이번 주 달력 */}
       <div className={styles.HomeCalendarWeeksContainer}>
@@ -67,9 +145,13 @@ export default function Home() {
           ? monthDates.map((date, index) => (
               <div
                 key={'month' + index}
+                data-selected={selectedDate.isSame(testCurrentDate.set('date', Number(date.day)), 'day')}
                 className={styles.HomeCalendarItem}
                 data-today={date.isToday}
                 data-current-month={date.isCurrentMonth}
+                onClick={() => {
+                  setSelectedDate(testCurrentDate.set('date', Number(date.day)));
+                }}
               >
                 <span className={styles.HomeCalendarItemNumber}>{date.day}</span>
               </div>
@@ -77,9 +159,13 @@ export default function Home() {
           : weekDates.map((date, index) => (
               <div
                 key={'week' + index}
+                data-selected={selectedDate.isSame(testCurrentDate.set('date', Number(date.day)), 'day')}
                 className={styles.HomeCalendarItem}
                 data-today={date.isToday}
                 data-current-month={date.isCurrentMonth}
+                onClick={() => {
+                  setSelectedDate(testCurrentDate.set('date', Number(date.day)));
+                }}
               >
                 <span className={styles.HomeCalendarItemNumber}>{date.day}</span>
               </div>
@@ -97,7 +183,60 @@ export default function Home() {
       {/* 
         타임라인 섹션
       */}
-      <div className={styles.HomeTimelineContainer}>test</div>
+      <div className={styles.HomeTimelineContainer}>
+        <div className={styles.HomeTimelineProgressContainer}>
+          <div className={styles.HomeTimelineProgressHeader}>
+            <span>{dayjs().format('MM/DD')} 목표</span>
+            <span>
+              {currentTimelineProgress}/{maxTimelineProgress}
+            </span>
+          </div>
+          <progress
+            value={currentTimelineProgress}
+            max={maxTimelineProgress}
+            className={styles.HomeTimelineProgress}
+          ></progress>
+        </div>
+        <div className={styles.HomeTimelineList}>
+          {homeTimelineList.map((list) => {
+            return (
+              <div className={styles.HomeTimelineItem} key={list.id}>
+                <div className={styles.HomeTimelineItemHeader}>
+                  <span className={styles.HomeTimelineItemHeaderTitle}>{list.goal}</span>
+                  <div className={styles.HomeTimelineItemDivider} />
+                  <span className={styles.HomeTimelineItemHeaderTitle}>D-{list.endDate.diff(dayjs(), 'day')}</span>
+                </div>
+                <div className={styles.HomeTimelineItemContent}>
+                  {list.items.map((item) => {
+                    return (
+                      <div
+                        key={item.id}
+                        className={styles.HomeTimelineItemContentItem}
+                        data-complete={item.isCompleted}
+                        onClick={() => {
+                          navigate(`/daily-goal/${item.id}`);
+                        }}
+                      >
+                        <button
+                          className={styles.HomeTimelineItemContentItemIcon}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleTimelineItemComplete(list.id, item.id);
+                          }}
+                        >
+                          {item.isCompleted ? <Check className={styles.HomeTimelineItemContentItemIconCheck} /> : null}
+                        </button>
+
+                        {item.title}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </section>
   );
 }

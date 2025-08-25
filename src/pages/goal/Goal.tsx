@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 import classNames from 'classnames';
 import dayjs from 'dayjs';
+import { CalendarCheck, Plus } from 'lucide-react';
 
 export const GoalStatus = {
   PENDING: '미완료',
@@ -30,9 +31,16 @@ const GoalList = [
 export default function Goal() {
   const [goalStatus, setGoalStatus] = React.useState<string>(GoalStatus.PENDING);
   const navigate = useNavigate();
+
   return (
     <section className={styles.GoalSection}>
-      <div className={styles.FloatingButton}>+</div>
+      <button className={styles.FloatingButton}>
+        <Plus />
+      </button>
+      <div>
+        <button onClick={() => navigate('/ai-assistant/new')}>AI 목표 생성</button>
+        <button onClick={() => navigate('/ai-assistant/new/directly')}>직접 목표 생성</button>
+      </div>
       <div className={styles.GoalStatusContainer}>
         <div
           className={classNames(styles.GoalStatusItem, {
@@ -68,9 +76,13 @@ export default function Goal() {
               navigate(`/goal/${goal.id}`);
             }}
           >
-            <div className={styles.GoalItemTitle}>{goal.title}</div>
-            <span> {dayjs(goal.endDate).format('YYYY-MM-DD')}</span>
-            <span>D-{dayjs(goal.endDate).diff(dayjs(), 'day')}</span>
+            <div className={styles.GoalItemImage}>이미지</div>
+            <div className={styles.GoalItemContent}>
+              <div className={styles.GoalItemContentDate}>
+                <CalendarCheck size={12} /> D-{dayjs(goal.endDate).diff(dayjs(), 'day')}
+              </div>
+              <div className={styles.GoalItemTitle}>{goal.title}</div>
+            </div>
           </div>
         ))}
       </div>

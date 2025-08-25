@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  CONTAINER_CONTEXT_PATH: 'docker'
+  CONTAINER_CONTEXT_PATH: ''
   DOCKERFILE_PATH: 'docker/Dockerfile'
   IMAGE_NAME: 'aiminder-client'
   IMAGE_TAG: 'develop-client'
@@ -30,19 +30,6 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build with npm
-        run: npm run build
-
-      - name: Upload Test Reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-reports
-          path: build/reports/tests/test
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

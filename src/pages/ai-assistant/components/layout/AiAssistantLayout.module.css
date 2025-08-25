@@ -1,0 +1,36 @@
+.AiAssistantLayoutHeader {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+}
+
+.AiAssistantLayoutHeaderTitle {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.AiAssistantLayoutHeaderButton {
+  position: relative;
+}
+
+.AiAssistantLayoutBellIcon {
+  color: rgb(138, 138, 138);
+  fill: rgb(138, 138, 138);
+}
+
+.AiAssistantLayoutBellDot {
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  right: 1px;
+}
