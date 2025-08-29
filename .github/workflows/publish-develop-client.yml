@@ -8,7 +8,7 @@ on:
 env:
   CONTAINER_CONTEXT_PATH: ''
   DOCKERFILE_PATH: 'docker/Dockerfile'
-  IMAGE_NAME: 'aiminder-client'
+  IMAGE_NAME: 'aiminder-server'
   IMAGE_TAG: 'develop-client'
   EC2_SSH_KEY: ${{ secrets.DEVELOP_EC2_SSH_PRIVATE_KEY }}
   EC2_USER: ${{ secrets.DEVELOP_EC2_SSH_USER }}
@@ -17,11 +17,22 @@ env:
   DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
+    outputs:
+      image-tag: ${{ steps.meta.outputs.image-tag }}
+      build-start-time: ${{ steps.timing.outputs.build-start-time }}
+      build-end-time: ${{ steps.timing.outputs.build-end-time }}
 
     steps:
+      - name: Record build start time
+        id: timing
+        run: |
+          BUILD_START_TIME=$(date -u '+%Y-%m-%dT%H:%M:%S.%3NZ')
+          echo "build-start-time=$BUILD_START_TIME" >> $GITHUB_OUTPUT
+          echo "🚀 Build started at $BUILD_START_TIME"
+
       - name: Checkout sources
         uses: actions/checkout@v4
 
@@ -30,6 +41,12 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run build tests
+        run: npm run build
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -40,22 +57,58 @@ jobs:
           username: ${{ env.DOCKER_HUB_USERNAME }}
           password: ${{ env.DOCKER_HUB_PASSWORD }}
 
-      - name: Get current date and time in custom format
+      - name: Generate image metadata
+        id: meta
         run: |
           CURRENT_DATE_TIME=$(date "+%Y%m%d%H%M%S")
-          echo "Current date and time is $CURRENT_DATE_TIME"
-          echo "CURRENT_DATE_TIME=$CURRENT_DATE_TIME" >> $GITHUB_ENV
+          IMAGE_TAG_WITH_DATE="${{ env.IMAGE_TAG }}-$CURRENT_DATE_TIME"
+          echo "image-tag=$IMAGE_TAG_WITH_DATE" >> $GITHUB_OUTPUT
+          echo "Generated image tag: $IMAGE_TAG_WITH_DATE"
 
-      - name: Use current date and time
-        run: echo "The date and time in custom format is ${{ env.CURRENT_DATE_TIME }}"
-
-      - name: Build and Push the Docker image and
+      - name: Build and Push Docker image
         uses: docker/build-push-action@v6
         with:
           context: ${{ env.CONTAINER_CONTEXT_PATH }}
           file: ${{ env.DOCKERFILE_PATH }}
-          tags: ${{ env.DOCKER_HUB_USERNAME}}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}-${{ env.CURRENT_DATE_TIME }}
+          platforms: linux/amd64
+          tags: ${{ env.DOCKER_HUB_USERNAME}}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.image-tag }}
           push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Record build end time
+        run: |
+          BUILD_END_TIME=$(date -u '+%Y-%m-%dT%H:%M:%S.%3NZ')
+          echo "build-end-time=$BUILD_END_TIME" >> $GITHUB_OUTPUT
+          echo "✅ Build completed at $BUILD_END_TIME"
+
+      - name: Upload build artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ github.run_number }}
+          path: |
+            dist/
+            node_modules/.cache/
+          retention-days: 7
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Record deploy start time
+        run: |
+          DEPLOY_START_TIME=$(date -u '+%Y-%m-%dT%H:%M:%S.%3NZ')
+          echo "🚀 Deploy started at $DEPLOY_START_TIME"
+
+      - name: Display build metrics
+        run: |
+          echo "📊 Build Metrics:"
+          echo "   Start time: ${{ needs.build.outputs.build-start-time }}"
+          echo "   End time: ${{ needs.build.outputs.build-end-time }}"
+          echo "   Image tag: ${{ needs.build.outputs.image-tag }}"
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
@@ -64,13 +117,44 @@ jobs:
           username: ${{ env.EC2_USER }}
           key: ${{ env.EC2_SSH_KEY }}
           script: |
+            echo "🔄 Updating environment configuration..."
             if [ ! -f .env ]; then
-              echo "DEVELOP_AIMINDER_CLIENT_TAG=${{ env.IMAGE_TAG }}-${{ env.CURRENT_DATE_TIME }}" > .env
+              echo "DEVELOP_AIMINDER_CLIENT_TAG=${{ needs.build.outputs.image-tag }}" > .env
             else
               if grep -q "^DEVELOP_AIMINDER_CLIENT_TAG=" .env; then
-                sed -i "s/^DEVELOP_AIMINDER_CLIENT_TAG=.*/DEVELOP_AIMINDER_CLIENT_TAG=${{ env.IMAGE_TAG }}-${{ env.CURRENT_DATE_TIME }}/" .env
+                sed -i "s/^DEVELOP_AIMINDER_CLIENT_TAG=.*/DEVELOP_AIMINDER_CLIENT_TAG=${{ needs.build.outputs.image-tag }}/" .env
               else
-                echo "DEVELOP_AIMINDER_CLIENT_TAG=${{ env.IMAGE_TAG }}-${{ env.CURRENT_DATE_TIME }}" >> .env
+                echo "DEVELOP_AIMINDER_CLIENT_TAG=${{ needs.build.outputs.image-tag }}" >> .env
               fi
             fi
-            sudo docker-compose down && sudo docker-compose up -d
+            
+            echo "🐳 Restarting containers..."
+            sudo docker-compose down
+            sudo docker-compose up -d
+            
+            echo "✅ Checking container status..."
+            sleep 5
+            if ! sudo docker-compose ps | grep -q "Up"; then
+              echo "❌ Container failed to start properly"
+              sudo docker-compose logs --tail=50
+              exit 1
+            fi
+            
+            echo "🎉 Deployment completed successfully!"
+
+      - name: Record deploy end time
+        if: always()
+        run: |
+          DEPLOY_END_TIME=$(date -u '+%Y-%m-%dT%H:%M:%S.%3NZ')
+          echo "✅ Deploy completed at $DEPLOY_END_TIME"
+
+      - name: Output failure logs on deploy failure
+        if: failure()
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USER }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            echo "❌ Deployment failed. Container logs:"
+            sudo docker-compose logs --tail=100
