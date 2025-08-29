@@ -1,4 +1,4 @@
-name: Publish Develop Server
+name: Publish Develop Client
 
 on:
   push:
