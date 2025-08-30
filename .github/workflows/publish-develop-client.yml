@@ -118,25 +118,54 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             echo "🔄 Updating environment configuration..."
+            cd /home/${{ env.EC2_USER }}
+            
+            # 홈 디렉토리의 .env 파일 업데이트 (CLIENT_TAG만)
             if [ ! -f .env ]; then
-              echo "DEVELOP_AIMINDER_CLIENT_TAG=${{ needs.build.outputs.image-tag }}" > .env
+              # 초기 배포 시 기본값으로 설정
+              echo "초기 .env 파일 생성 중..."
+            
+              cat > .env << EOF
+            DEVELOP_AIMINDER_SERVER_TAG=develop-server-latest
+            DEVELOP_AIMINDER_CLIENT_TAG=${{ needs.build.outputs.image-tag }}
+            EOF
+              echo "⚠️  초기 배포: SERVER_TAG를 기본값(develop-server-latest)으로 설정했습니다."
+              echo "   서버 워크플로우 실행 후 자동으로 업데이트됩니다."
             else
+              # 기존 파일에서 CLIENT_TAG만 업데이트
+              echo "기존 .env 파일에서 CLIENT_TAG 업데이트 중..."
               if grep -q "^DEVELOP_AIMINDER_CLIENT_TAG=" .env; then
                 sed -i "s/^DEVELOP_AIMINDER_CLIENT_TAG=.*/DEVELOP_AIMINDER_CLIENT_TAG=${{ needs.build.outputs.image-tag }}/" .env
               else
                 echo "DEVELOP_AIMINDER_CLIENT_TAG=${{ needs.build.outputs.image-tag }}" >> .env
               fi
+            
+              # SERVER_TAG가 없으면 기본값으로 추가
+              if ! grep -q "^DEVELOP_AIMINDER_SERVER_TAG=" .env; then
+                echo "DEVELOP_AIMINDER_SERVER_TAG=develop-server-latest" >> .env
+                echo "⚠️  SERVER_TAG 누락: 기본값(develop-server-latest)으로 설정했습니다."
+                echo "   서버 워크플로우 실행 후 자동으로 업데이트됩니다."
+              else
+                echo "✅ SERVER_TAG 보존됨"
+              fi
             fi
             
+            # 현재 환경 변수 상태 출력
+            echo "=== 현재 환경 변수 ==="
+            cat .env
+            
             echo "🐳 Restarting containers..."
-            sudo docker-compose down
-            sudo docker-compose up -d
+            cd /home/${{ env.EC2_USER }}/aiminder-deployment
+            
+            # 상위 디렉토리의 .env 파일 사용
+            sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml down
+            sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml up -d
             
             echo "✅ Checking container status..."
             sleep 5
-            if ! sudo docker-compose ps | grep -q "Up"; then
+            if ! sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml ps | grep -q "Up"; then
               echo "❌ Container failed to start properly"
-              sudo docker-compose logs --tail=50
+              sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml logs --tail=50
               exit 1
             fi
             
@@ -157,4 +186,5 @@ jobs:
           key: ${{ env.EC2_SSH_KEY }}
           script: |
             echo "❌ Deployment failed. Container logs:"
-            sudo docker-compose logs --tail=100
+            cd /home/${{ env.EC2_USER }}/aiminder-deployment
+            sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml logs --tail=100
