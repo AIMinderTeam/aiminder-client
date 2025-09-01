@@ -1,0 +1,19 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 40px;
+  column-gap: 80px;
+  padding: 40px;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.item {
+  border: 1px solid #e9ebf8;
+  padding: 10px;
+  border-radius: 10px;
+}

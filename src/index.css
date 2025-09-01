@@ -11,7 +11,46 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --color-primary: #f56623;
+  --color-primary: #f08a71;
+
+  --white: #ffffff;
+  --base-50: #e6e6e6;
+  --base-100: #b0b0b0;
+  --base-200: #8a8a8a;
+  --base-300: #545454;
+  --base-400: #333333;
+  --black: #000000;
+
+  --primary-50: #fef3f1;
+  --primary-100: #fadbd3;
+  --primary-200: #f8c9be;
+  --primary-300: #f5b1a0;
+  --primary-400: #f3a18d;
+  --primary-500: #f08a71;
+  --primary-600: #da7e67;
+  --primary-700: #aa6250;
+
+  --secondary-50: #eef8f8;
+  --secondary-100: #cce9ea;
+  --secondary-200: #b3dedf;
+  --secondary-300: #90cfd1;
+  --secondary-400: #7ac6c8;
+  --secondary-500: #59b8ba;
+  --secondary-600: #51a7a9;
+  --secondary-700: #3f8384;
+
+  --danger-50: #fbefef;
+  --danger-100: #f1cdcd;
+  --danger-200: #eab4b4;
+  --danger-300: #e19292;
+  --danger-400: #db7d7d;
+  --danger-500: #d25d5d;
+  --danger-600: #bf5555;
+  --danger-700: #954242;
+
+  --point-olive: #cdcb87;
+  --point-teal: #30727e;
+  --point-cream: #fdf0dd;
 }
 
 body {
