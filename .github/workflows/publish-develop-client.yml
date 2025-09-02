@@ -161,30 +161,68 @@ jobs:
             sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml down
             sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml up -d
             
-            echo "✅ Checking container status..."
-            sleep 5
-            if ! sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml ps | grep -q "Up"; then
-              echo "❌ Container failed to start properly"
-              sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml logs --tail=50
+             # 환경 변수 검증
+            echo "=== 환경 변수 확인 ==="
+            if [ ! -f ../.env ]; then
+              echo "❌ .env 파일이 존재하지 않습니다!"
               exit 1
             fi
-            
-            echo "🎉 Deployment completed successfully!"
 
-      - name: Record deploy end time
+            source ../.env
+            if [ -z "$DEVELOP_AIMINDER_SERVER_TAG" ] || [ -z "$DEVELOP_AIMINDER_CLIENT_TAG" ]; then
+              echo "❌ 필수 환경 변수가 누락되었습니다:"
+              [ -z "$DEVELOP_AIMINDER_SERVER_TAG" ] && echo "  - DEVELOP_AIMINDER_SERVER_TAG"
+              [ -z "$DEVELOP_AIMINDER_CLIENT_TAG" ] && echo "  - DEVELOP_AIMINDER_CLIENT_TAG"
+              exit 1
+            fi
+
+            echo "✅ 환경 변수 확인 완료:"
+            echo "  - DEVELOP_AIMINDER_SERVER_TAG=$DEVELOP_AIMINDER_SERVER_TAG"
+            echo "  - DEVELOP_AIMINDER_CLIENT_TAG=$DEVELOP_AIMINDER_CLIENT_TAG"
+
+            # 환경 변수를 export하여 sudo 실행 시 전달
+            export DEVELOP_AIMINDER_SERVER_TAG
+            export DEVELOP_AIMINDER_CLIENT_TAG
+
+            echo "=== 컨테이너 상태 확인 시작 ==="
+
+            # Docker Compose 명령어로 직접 상태 확인 (디버깅용)
+            echo "디버깅: Docker Compose ps 명령 직접 실행"
+            sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml ps
+
+            # 컨테이너 상태 확인 재시도 로직 (최대 3분, 30초 간격)
+            MAX_RETRIES=6
+            RETRY_INTERVAL=30
+
+            for i in $(seq 1 $MAX_RETRIES); do
+              echo "컨테이너 상태 확인 시도 $i/$MAX_RETRIES..."
+
+              # sudo -E 옵션으로 환경 변수 보존
+              if sudo -E ./container-check.sh; then
+                echo "✅ 모든 컨테이너가 정상적으로 실행 중입니다!"
+                break
+              else
+                if [ $i -eq $MAX_RETRIES ]; then
+                  echo "❌ 컨테이너 상태 확인 실패: 최대 재시도 횟수 초과"
+                  echo "컨테이너 상태 디버깅 정보:"
+                  sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml ps
+                  sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml logs --tail=20 aiminder-server
+                  sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml logs --tail=20 aiminder-client
+                  sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml logs --tail=20 aiminder-database
+                  exit 1
+                else
+                  echo "⏳ $RETRY_INTERVAL초 후 재시도..."
+                  sleep $RETRY_INTERVAL
+                fi
+              fi
+            done
+
+            echo "=== 최종 컨테이너 상태 ==="
+            sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml ps
+
+      - name: Performance Metrics - Deploy End
         if: always()
         run: |
-          DEPLOY_END_TIME=$(date -u '+%Y-%m-%dT%H:%M:%S.%3NZ')
-          echo "✅ Deploy completed at $DEPLOY_END_TIME"
-
-      - name: Output failure logs on deploy failure
-        if: failure()
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ env.EC2_HOST }}
-          username: ${{ env.EC2_USER }}
-          key: ${{ env.EC2_SSH_KEY }}
-          script: |
-            echo "❌ Deployment failed. Container logs:"
-            cd /home/${{ env.EC2_USER }}/aiminder-deployment
-            sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml logs --tail=100
+          echo "Deploy end time: $(date)"
+          echo "Workflow: Deploy Job Completed"
+          echo "Total workflow completed for run: $GITHUB_RUN_NUMBER"
