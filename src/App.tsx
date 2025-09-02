@@ -1,3 +1,5 @@
+import Test from './pages/test/Test';
+
 import React, { Suspense } from 'react';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
@@ -141,6 +143,10 @@ function App() {
       ],
     },
 
+    {
+      path: '/test',
+      element: <Test />,
+    },
     {
       path: '/',
       element: (
