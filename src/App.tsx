@@ -24,7 +24,7 @@ import LoadingPage from '@/shared/components/spinner/loading-page';
 
 const Login = React.lazy(() => import('@/pages/login/Login'));
 const Home = React.lazy(() => import('@/pages/home/Home'));
-const Goal = React.lazy(() => import('@/pages/goal/Goal'));
+// const Goal = React.lazy(() => import('@/pages/goal/Goal'));
 const AiAssistant = React.lazy(() => import('@/pages/ai-assistant/AiAssistant'));
 const Notification = React.lazy(() => import('@/pages/notification/Notification'));
 const DailyGoal = React.lazy(() => import('@/pages/daily-goal/DailyGoal'));
