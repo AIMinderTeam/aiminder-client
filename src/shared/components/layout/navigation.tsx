@@ -1,11 +1,12 @@
-import styles from './navigation.module.css';
-
 import { Link, useLocation } from 'react-router-dom';
 
 import classNames from 'classnames';
 
 export default function Navigation() {
-  const { pathname } = useLocation();
+  const location = useLocation();
+  const { pathname } = location;
+  // const domain = pathname.split('/')[1];
+  // const subDomain = pathname.split('/')[2];
 
   const isActive = (path: string) => {
     if (path === '/') {
@@ -15,28 +16,49 @@ export default function Navigation() {
     }
   };
   return (
-    <nav className={styles.Navigation}>
-      <Link to="/" className={classNames(styles.NavigationLink, isActive('/') && styles.NavigationLinkActive)}>
+    <nav className="fixed right-0 bottom-0 left-0 z-99 flex justify-between border-t border-gray-300 bg-white p-4">
+      <Link
+        to="/"
+        className={classNames(
+          'text-decoration-none text-base font-medium text-gray-500',
+          isActive('/') && 'text-primary-500 font-semibold',
+        )}
+      >
         Home
       </Link>
-      <Link to="/goal" className={classNames(styles.NavigationLink, isActive('/goal') && styles.NavigationLinkActive)}>
+      <Link
+        to="/goal"
+        className={classNames(
+          'text-decoration-none text-base font-medium text-gray-500',
+          isActive('/goal') && 'text-primary-500 font-semibold',
+        )}
+      >
         Goal
       </Link>
       <Link
         to="/ai-assistant"
-        className={classNames(styles.NavigationLink, isActive('/ai-assistant') && styles.NavigationLinkActive)}
+        className={classNames(
+          'text-decoration-none text-base font-medium text-gray-500',
+          isActive('/ai-assistant') && 'text-primary-500 font-semibold',
+        )}
       >
         Ai Assistant
       </Link>
       <Link
         to="/login"
-        className={classNames(styles.NavigationLink, isActive('/login') && styles.NavigationLinkActive)}
+        className={classNames(
+          'text-decoration-none text-base font-medium text-gray-500',
+          isActive('/login') && 'text-primary-500 font-semibold',
+        )}
       >
         Login
       </Link>
       <Link
         to="/mypage"
-        className={classNames(styles.NavigationLink, isActive('/mypage') && styles.NavigationLinkActive)}
+        className={classNames(
+          'text-decoration-none text-base font-medium text-gray-500',
+          isActive('/mypage') && 'text-primary-500 font-semibold',
+        )}
       >
         Mypage
       </Link>

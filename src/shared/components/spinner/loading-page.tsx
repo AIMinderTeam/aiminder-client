@@ -1,5 +1,3 @@
-import styles from './loading-page.module.css';
-
 export default function LoadingPage() {
-  return <div className={styles.LoadingPage}>LoadingPage</div>;
+  return <div className="flex h-screen items-center justify-center">LoadingPage</div>;
 }

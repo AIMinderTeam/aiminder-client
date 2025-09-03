@@ -1,9 +1,8 @@
 import { GoalStatus } from '../Goal';
 
-import styles from './GoalDetail.module.css';
-
 import { useState } from 'react';
 
+import testImage from '@/assets/test/image2.png';
 import dayjs from 'dayjs';
 import { Check } from 'lucide-react';
 
@@ -34,7 +33,7 @@ const listData = [
     ],
   },
   {
-    dailyGoalDate: '2025-08-12',
+    dailyGoalDate: '2025-09-12',
     items: [
       {
         id: 3,
@@ -73,19 +72,20 @@ export default function DetailView() {
   };
 
   return (
-    <div className={styles.GoalDetailSection}>
-      <div className={styles.TestImage}>이미지</div>
-
-      <div className={styles.GoalDescriptionContainer}>
-        <span className={styles.StatusBadge}>{GoalStatus.PENDING}</span>
-        <span className={styles.DDay}>D-{dayjs(goalData.endDate).diff(dayjs(), 'day')}</span>
-        <span className={styles.CurrentDay}>{dayjs(goalData.endDate).format('YYYY-MM-DD')}</span>
+    <div className="flex flex-col gap-4">
+      <div className="h-[200px] bg-gray-200">
+        <img src={testImage} alt="goal-image" className="h-full w-full object-cover" />
       </div>
 
-      <div className={styles.HomeTimelineContainer}>
+      <div className="flex flex-col gap-4 px-4 py-0">
         <h3>{goalData.title}</h3>
-        <div className={styles.HomeTimelineProgressContainer}>
-          <div className={styles.HomeTimelineProgressHeader}>
+        <div className="flex items-center gap-2 text-xs">
+          <span className="rounded-full bg-gray-200 px-2 py-1">{GoalStatus.PENDING}</span>
+          <span className="text-gray-500">{dayjs(goalData.endDate).format('YYYY.MM.DD')}</span>
+          <span className="text-gray-500">D-{dayjs(goalData.endDate).diff(dayjs(), 'day')}</span>
+        </div>
+        <div className="flex flex-1 flex-col gap-2">
+          <div className="flex items-center justify-between text-xs text-gray-500">
             <span>{dayjs('2025-12-31').format('MM/DD')} 목표</span>
             <span>
               {currentTimelineProgress}/{maxTimelineProgress}
@@ -94,40 +94,42 @@ export default function DetailView() {
           <progress
             value={currentTimelineProgress}
             max={maxTimelineProgress}
-            className={styles.HomeTimelineProgress}
+            className="h-3 w-full appearance-none rounded-md bg-gray-200"
           ></progress>
         </div>
-
-        <div className={styles.HomeTimelineList}>
+        <div className="flex flex-col gap-3">
           {list.map((list) => {
+            const diffCount = dayjs(list.dailyGoalDate).diff(dayjs(), 'day');
+
             return (
-              <div className={styles.HomeTimelineItem} key={list.dailyGoalDate}>
-                <div className={styles.HomeTimelineItemHeader}>
-                  <span className={styles.HomeTimelineItemHeaderTitle}>{list.dailyGoalDate}</span>
-                  <div className={styles.HomeTimelineItemDivider} />
-                  <span className={styles.HomeTimelineItemHeaderTitle}>
-                    D-{dayjs(list.dailyGoalDate).diff(dayjs(), 'day')}
+              <div key={list.dailyGoalDate}>
+                <div className="flex items-center justify-between gap-3 py-2 text-xs text-gray-500">
+                  <span className="shrink-0">{list.dailyGoalDate}</span>
+                  <div className="h-px w-full bg-gray-200" />
+                  <span className="shrink-0">
+                    D{diffCount < 0 ? '+' : '-'}
+                    {diffCount < 0 ? diffCount * -1 : diffCount}
                   </span>
                 </div>
-                <div className={styles.HomeTimelineItemContent}>
+                <div className="flex flex-col gap-3">
                   {list.items.map((item) => {
                     return (
                       <div
                         key={item.id}
-                        className={styles.HomeTimelineItemContentItem}
+                        className="flex items-center gap-3 rounded-md bg-gray-100 px-3 py-2 text-sm active:bg-gray-200 data-[complete=true]:opacity-50"
                         data-complete={item.isCompleted}
                         onClick={() => {
                           // navigate(`/daily-goal/${item.id}`);
                         }}
                       >
                         <button
-                          className={styles.HomeTimelineItemContentItemIcon}
+                          className="flex size-8 items-center justify-center rounded-full border border-gray-300 active:bg-gray-200"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleTimelineItemComplete(list.dailyGoalDate, item.id);
                           }}
                         >
-                          {item.isCompleted ? <Check className={styles.HomeTimelineItemContentItemIconCheck} /> : null}
+                          {item.isCompleted ? <Check className="stroke-width-1.5" /> : null}
                         </button>
 
                         {item.title}

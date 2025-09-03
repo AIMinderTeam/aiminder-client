@@ -1,3 +1,5 @@
+@import 'tailwindcss';
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -60,4 +62,52 @@ body {
 
   max-width: 100dvw;
   max-height: 100dvh;
+
+  line-height: 1;
+}
+
+h3 {
+  margin: 12px 0;
+}
+
+progress::-webkit-progress-value {
+  background-color: var(--color-primary);
+  border-radius: 8px;
+}
+progress::-webkit-progress-bar {
+  background-color: #dbdbdb;
+  border-radius: 8px;
+}
+
+@theme {
+  --color-primary-50: #fef3f1;
+  --color-primary-100: #fadbd3;
+  --color-primary-200: #f8c9be;
+  --color-primary-300: #f5b1a0;
+  --color-primary-400: #f3a18d;
+  --color-primary-500: #f08a71;
+  --color-primary-600: #da7e67;
+  --color-primary-700: #aa6250;
+
+  --color-secondary-50: #eef8f8;
+  --color-secondary-100: #cce9ea;
+  --color-secondary-200: #b3dedf;
+  --color-secondary-300: #90cfd1;
+  --color-secondary-400: #7ac6c8;
+  --color-secondary-500: #59b8ba;
+  --color-secondary-600: #51a7a9;
+  --color-secondary-700: #3f8384;
+
+  --color-danger-50: #fbefef;
+  --color-danger-100: #f1cdcd;
+  --color-danger-200: #eab4b4;
+  --color-danger-300: #e19292;
+  --color-danger-400: #db7d7d;
+  --color-danger-500: #d25d5d;
+  --color-danger-600: #bf5555;
+  --color-danger-700: #954242;
+
+  --color-point-olive: #cdcb87;
+  --color-point-teal: #30727e;
+  --color-point-cream: #fdf0dd;
 }

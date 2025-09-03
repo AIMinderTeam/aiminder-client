@@ -119,22 +119,22 @@ export default function Home() {
   };
 
   return (
-    <section className={styles.HomeSection}>
-      <div className={styles.HomeTitle}>
-        <button className={styles.HomeMonthNavigationButton} onClick={() => handleMonthNavigation('prev')}>
+    <section className="flex flex-col gap-3 px-5 py-0">
+      <div className="flex items-center gap-2">
+        <button className="border-none bg-transparent p-0" onClick={() => handleMonthNavigation('prev')}>
           <ChevronLeft />
         </button>
-        <span className={styles.HomeTitleText}>{testCurrentDate.format('YYYY년 M월')}</span>
-        <button className={styles.HomeMonthNavigationButton} onClick={() => handleMonthNavigation('next')}>
+        <span className="text-sm font-bold">{testCurrentDate.format('YYYY년 M월')}</span>
+        <button className="border-none bg-transparent p-0" onClick={() => handleMonthNavigation('next')}>
           <ChevronRight />
         </button>
       </div>
 
       {/* 이번 주 달력 */}
-      <div className={styles.HomeCalendarWeeksContainer}>
+      <div className="grid grid-cols-7 justify-items-center">
         {Array.from({ length: 7 }).map((_, index) => (
-          <div key={index} className={styles.HomeCalendarWeek}>
-            <span className={styles.HomeCalendarWeekNumber} data-day={days[index]}>
+          <div key={index} className="flex items-center justify-center">
+            <span className="text-sm font-bold" data-day={days[index]}>
               {days[index]}
             </span>
           </div>
@@ -183,9 +183,9 @@ export default function Home() {
       {/* 
         타임라인 섹션
       */}
-      <div className={styles.HomeTimelineContainer}>
-        <div className={styles.HomeTimelineProgressContainer}>
-          <div className={styles.HomeTimelineProgressHeader}>
+      <div className="flex flex-col">
+        <div className="flex flex-1 flex-col">
+          <div className="flex items-center justify-between text-sm text-gray-500">
             <span>{dayjs().format('MM/DD')} 목표</span>
             <span>
               {currentTimelineProgress}/{maxTimelineProgress}
@@ -194,37 +194,37 @@ export default function Home() {
           <progress
             value={currentTimelineProgress}
             max={maxTimelineProgress}
-            className={styles.HomeTimelineProgress}
+            className="h-3 w-full appearance-none rounded-md bg-gray-200"
           ></progress>
         </div>
-        <div className={styles.HomeTimelineList}>
+        <div className="flex flex-col gap-2">
           {homeTimelineList.map((list) => {
             return (
-              <div className={styles.HomeTimelineItem} key={list.id}>
-                <div className={styles.HomeTimelineItemHeader}>
-                  <span className={styles.HomeTimelineItemHeaderTitle}>{list.goal}</span>
-                  <div className={styles.HomeTimelineItemDivider} />
-                  <span className={styles.HomeTimelineItemHeaderTitle}>D-{list.endDate.diff(dayjs(), 'day')}</span>
+              <div className="flex flex-col" key={list.id}>
+                <div className="flex items-center justify-between gap-3 py-2 text-xs text-gray-500">
+                  <span className="shrink-0 text-xs font-bold">{list.goal}</span>
+                  <div className="h-px w-full bg-gray-200" />
+                  <span className="shrink-0 text-xs font-bold">D-{list.endDate.diff(dayjs(), 'day')}</span>
                 </div>
-                <div className={styles.HomeTimelineItemContent}>
+                <div className="flex flex-col gap-2">
                   {list.items.map((item) => {
                     return (
                       <div
                         key={item.id}
-                        className={styles.HomeTimelineItemContentItem}
+                        className="flex items-center gap-3 rounded-md bg-gray-100 px-3 py-2 text-sm active:bg-gray-200 data-[complete=true]:opacity-50"
                         data-complete={item.isCompleted}
                         onClick={() => {
                           navigate(`/daily-goal/${item.id}`);
                         }}
                       >
                         <button
-                          className={styles.HomeTimelineItemContentItemIcon}
+                          className="flex size-8 items-center justify-center rounded-full border border-gray-300 active:bg-gray-200"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleTimelineItemComplete(list.id, item.id);
                           }}
                         >
-                          {item.isCompleted ? <Check className={styles.HomeTimelineItemContentItemIconCheck} /> : null}
+                          {item.isCompleted ? <Check className="stroke-width-1.5" /> : null}
                         </button>
 
                         {item.title}

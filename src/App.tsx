@@ -1,3 +1,4 @@
+import GoalPage from './pages/goal/GoalPage';
 import Test from './pages/test/Test';
 
 import React, { Suspense } from 'react';
@@ -41,9 +42,10 @@ function App() {
         {
           path: '',
           element: (
-            <GoalLayout>
-              <Goal />
-            </GoalLayout>
+            <GoalPage />
+            // <GoalLayout>
+            //   <Goal />
+            // </GoalLayout>
           ),
         },
         {

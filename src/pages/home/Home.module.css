@@ -152,8 +152,6 @@ progress::-webkit-progress-bar {
   flex-direction: column;
   gap: 10px;
 }
-.HomeTimelineItem {
-}
 
 .HomeTimelineItemHeader {
   display: flex;
