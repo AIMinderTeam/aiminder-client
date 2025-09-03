@@ -1,0 +1,228 @@
+name: Publish Develop Client
+
+on:
+  push:
+    branches: [ develop ]
+  workflow_dispatch:
+
+env:
+  CONTAINER_CONTEXT_PATH: ''
+  DOCKERFILE_PATH: 'docker/Dockerfile'
+  IMAGE_NAME: 'aiminder-server'
+  IMAGE_TAG: 'develop-client'
+  EC2_SSH_KEY: ${{ secrets.DEVELOP_EC2_SSH_PRIVATE_KEY }}
+  EC2_USER: ${{ secrets.DEVELOP_EC2_SSH_USER }}
+  EC2_HOST: ${{ secrets.DEVELOP_EC2_HOST }}
+  DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+  DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      image-tag: ${{ steps.meta.outputs.image-tag }}
+      build-start-time: ${{ steps.timing.outputs.build-start-time }}
+      build-end-time: ${{ steps.timing.outputs.build-end-time }}
+
+    steps:
+      - name: Record build start time
+        id: timing
+        run: |
+          BUILD_START_TIME=$(date -u '+%Y-%m-%dT%H:%M:%S.%3NZ')
+          echo "build-start-time=$BUILD_START_TIME" >> $GITHUB_OUTPUT
+          echo "🚀 Build started at $BUILD_START_TIME"
+
+      - name: Checkout sources
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run build tests
+        run: npm run build
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKER_HUB_USERNAME }}
+          password: ${{ env.DOCKER_HUB_PASSWORD }}
+
+      - name: Generate image metadata
+        id: meta
+        run: |
+          CURRENT_DATE_TIME=$(date "+%Y%m%d%H%M%S")
+          IMAGE_TAG_WITH_DATE="${{ env.IMAGE_TAG }}-$CURRENT_DATE_TIME"
+          echo "image-tag=$IMAGE_TAG_WITH_DATE" >> $GITHUB_OUTPUT
+          echo "Generated image tag: $IMAGE_TAG_WITH_DATE"
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ env.CONTAINER_CONTEXT_PATH }}
+          file: ${{ env.DOCKERFILE_PATH }}
+          platforms: linux/amd64
+          tags: ${{ env.DOCKER_HUB_USERNAME}}/${{ env.IMAGE_NAME }}:${{ steps.meta.outputs.image-tag }}
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Record build end time
+        run: |
+          BUILD_END_TIME=$(date -u '+%Y-%m-%dT%H:%M:%S.%3NZ')
+          echo "build-end-time=$BUILD_END_TIME" >> $GITHUB_OUTPUT
+          echo "✅ Build completed at $BUILD_END_TIME"
+
+      - name: Upload build artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ github.run_number }}
+          path: |
+            dist/
+            node_modules/.cache/
+          retention-days: 7
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Record deploy start time
+        run: |
+          DEPLOY_START_TIME=$(date -u '+%Y-%m-%dT%H:%M:%S.%3NZ')
+          echo "🚀 Deploy started at $DEPLOY_START_TIME"
+
+      - name: Display build metrics
+        run: |
+          echo "📊 Build Metrics:"
+          echo "   Start time: ${{ needs.build.outputs.build-start-time }}"
+          echo "   End time: ${{ needs.build.outputs.build-end-time }}"
+          echo "   Image tag: ${{ needs.build.outputs.image-tag }}"
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ env.EC2_HOST }}
+          username: ${{ env.EC2_USER }}
+          key: ${{ env.EC2_SSH_KEY }}
+          script: |
+            echo "🔄 Updating environment configuration..."
+            cd /home/${{ env.EC2_USER }}
+            
+            # 홈 디렉토리의 .env 파일 업데이트 (CLIENT_TAG만)
+            if [ ! -f .env ]; then
+              # 초기 배포 시 기본값으로 설정
+              echo "초기 .env 파일 생성 중..."
+            
+              cat > .env << EOF
+            DEVELOP_AIMINDER_SERVER_TAG=develop-server-latest
+            DEVELOP_AIMINDER_CLIENT_TAG=${{ needs.build.outputs.image-tag }}
+            EOF
+              echo "⚠️  초기 배포: SERVER_TAG를 기본값(develop-server-latest)으로 설정했습니다."
+              echo "   서버 워크플로우 실행 후 자동으로 업데이트됩니다."
+            else
+              # 기존 파일에서 CLIENT_TAG만 업데이트
+              echo "기존 .env 파일에서 CLIENT_TAG 업데이트 중..."
+              if grep -q "^DEVELOP_AIMINDER_CLIENT_TAG=" .env; then
+                sed -i "s/^DEVELOP_AIMINDER_CLIENT_TAG=.*/DEVELOP_AIMINDER_CLIENT_TAG=${{ needs.build.outputs.image-tag }}/" .env
+              else
+                echo "DEVELOP_AIMINDER_CLIENT_TAG=${{ needs.build.outputs.image-tag }}" >> .env
+              fi
+            
+              # SERVER_TAG가 없으면 기본값으로 추가
+              if ! grep -q "^DEVELOP_AIMINDER_SERVER_TAG=" .env; then
+                echo "DEVELOP_AIMINDER_SERVER_TAG=develop-server-latest" >> .env
+                echo "⚠️  SERVER_TAG 누락: 기본값(develop-server-latest)으로 설정했습니다."
+                echo "   서버 워크플로우 실행 후 자동으로 업데이트됩니다."
+              else
+                echo "✅ SERVER_TAG 보존됨"
+              fi
+            fi
+            
+            # 현재 환경 변수 상태 출력
+            echo "=== 현재 환경 변수 ==="
+            cat .env
+            
+            echo "🐳 Restarting containers..."
+            cd /home/${{ env.EC2_USER }}/aiminder-deployment
+            
+            # 상위 디렉토리의 .env 파일 사용
+            sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml down
+            sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml up -d
+            
+             # 환경 변수 검증
+            echo "=== 환경 변수 확인 ==="
+            if [ ! -f ../.env ]; then
+              echo "❌ .env 파일이 존재하지 않습니다!"
+              exit 1
+            fi
+
+            source ../.env
+            if [ -z "$DEVELOP_AIMINDER_SERVER_TAG" ] || [ -z "$DEVELOP_AIMINDER_CLIENT_TAG" ]; then
+              echo "❌ 필수 환경 변수가 누락되었습니다:"
+              [ -z "$DEVELOP_AIMINDER_SERVER_TAG" ] && echo "  - DEVELOP_AIMINDER_SERVER_TAG"
+              [ -z "$DEVELOP_AIMINDER_CLIENT_TAG" ] && echo "  - DEVELOP_AIMINDER_CLIENT_TAG"
+              exit 1
+            fi
+
+            echo "✅ 환경 변수 확인 완료:"
+            echo "  - DEVELOP_AIMINDER_SERVER_TAG=$DEVELOP_AIMINDER_SERVER_TAG"
+            echo "  - DEVELOP_AIMINDER_CLIENT_TAG=$DEVELOP_AIMINDER_CLIENT_TAG"
+
+            # 환경 변수를 export하여 sudo 실행 시 전달
+            export DEVELOP_AIMINDER_SERVER_TAG
+            export DEVELOP_AIMINDER_CLIENT_TAG
+
+            echo "=== 컨테이너 상태 확인 시작 ==="
+
+            # Docker Compose 명령어로 직접 상태 확인 (디버깅용)
+            echo "디버깅: Docker Compose ps 명령 직접 실행"
+            sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml ps
+
+            # 컨테이너 상태 확인 재시도 로직 (최대 3분, 30초 간격)
+            MAX_RETRIES=6
+            RETRY_INTERVAL=30
+
+            for i in $(seq 1 $MAX_RETRIES); do
+              echo "컨테이너 상태 확인 시도 $i/$MAX_RETRIES..."
+
+              # sudo -E 옵션으로 환경 변수 보존
+              if sudo -E ./container-check.sh; then
+                echo "✅ 모든 컨테이너가 정상적으로 실행 중입니다!"
+                break
+              else
+                if [ $i -eq $MAX_RETRIES ]; then
+                  echo "❌ 컨테이너 상태 확인 실패: 최대 재시도 횟수 초과"
+                  echo "컨테이너 상태 디버깅 정보:"
+                  sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml ps
+                  sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml logs --tail=20 aiminder-server
+                  sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml logs --tail=20 aiminder-client
+                  sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml logs --tail=20 aiminder-database
+                  exit 1
+                else
+                  echo "⏳ $RETRY_INTERVAL초 후 재시도..."
+                  sleep $RETRY_INTERVAL
+                fi
+              fi
+            done
+
+            echo "=== 최종 컨테이너 상태 ==="
+            sudo docker-compose --env-file ../.env -f docker-compose-ssl.yml ps
+
+      - name: Performance Metrics - Deploy End
+        if: always()
+        run: |
+          echo "Deploy end time: $(date)"
+          echo "Workflow: Deploy Job Completed"
+          echo "Total workflow completed for run: $GITHUB_RUN_NUMBER"
