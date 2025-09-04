@@ -16,7 +16,7 @@ export default function Header({ title }: { title: string }) {
   };
 
   return (
-    <header className="sticky top-0 right-0 left-0 flex items-center justify-between gap-3 bg-white p-4">
+    <header className="sticky top-0 right-0 left-0 z-99 flex items-center justify-between gap-3 bg-white p-4">
       {subDomain ? (
         <button onClick={goBack} className="size-6 border-none bg-transparent p-0">
           <ChevronLeft size={24} />

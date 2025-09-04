@@ -2,9 +2,12 @@ import { GoalStatus } from '../Goal';
 
 import { useState } from 'react';
 
-import testImage from '@/assets/test/image2.png';
+import testImage from '@/assets/test/image1.png';
+import DailyCard from '@/shared/components/daily-card';
+import Badge from '@/shared/components/ui/badge';
+import { Button } from '@/shared/components/ui/button';
 import dayjs from 'dayjs';
-import { Check } from 'lucide-react';
+import { CalendarCheck, Image, Plus } from 'lucide-react';
 
 const goalData = {
   id: 1,
@@ -50,41 +53,47 @@ const listData = [
 ];
 
 export default function DetailView() {
-  const [list, setList] = useState(listData);
+  const [list, _setList] = useState(listData);
 
-  const handleTimelineItemComplete = (goalDate: string, contentId: number) => {
-    setList(
-      list.map((item) => {
-        if (item.dailyGoalDate === goalDate) {
-          return {
-            ...item,
-            items: item.items.map((item) => {
-              if (item.id === contentId) {
-                return { ...item, isCompleted: !item.isCompleted };
-              }
-              return item;
-            }),
-          };
-        }
-        return item;
-      }),
-    );
-  };
+  // const handleTimelineItemComplete = (goalDate: string, contentId: number) => {
+  //   setList(
+  //     list.map((item) => {
+  //       if (item.dailyGoalDate === goalDate) {
+  //         return {
+  //           ...item,
+  //           items: item.items.map((item) => {
+  //             if (item.id === contentId) {
+  //               return { ...item, isCompleted: !item.isCompleted };
+  //             }
+  //             return item;
+  //           }),
+  //         };
+  //       }
+  //       return item;
+  //     }),
+  //   );
+  // };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="h-[200px] bg-gray-200">
-        <img src={testImage} alt="goal-image" className="h-full w-full object-cover" />
+    <div className="flex flex-col">
+      <div className="relative">
+        <img src={testImage} alt="goal-image" className="h-[280px] w-full object-cover" />
+        <Button size="icon" className="absolute right-4 bottom-4 shadow-sm">
+          <Image size={20} />
+        </Button>
       </div>
 
-      <div className="flex flex-col gap-4 px-4 py-0">
-        <h3>{goalData.title}</h3>
-        <div className="flex items-center gap-2 text-xs">
-          <span className="rounded-full bg-gray-200 px-2 py-1">{GoalStatus.PENDING}</span>
-          <span className="text-gray-500">{dayjs(goalData.endDate).format('YYYY.MM.DD')}</span>
+      <div className="flex flex-col gap-2 px-4 py-0">
+        <h3 className="py-2 text-xl font-bold">{goalData.title}</h3>
+        <div className="flex items-center gap-4 text-xs">
+          <Badge variant="gray">{GoalStatus.PENDING}</Badge>
+          <span className="flex items-center gap-1 text-xs text-gray-500">
+            <CalendarCheck size={12} />
+            {dayjs(goalData.endDate).format('YYYY.MM.DD')}
+          </span>
           <span className="text-gray-500">D-{dayjs(goalData.endDate).diff(dayjs(), 'day')}</span>
         </div>
-        <div className="flex flex-1 flex-col gap-2">
+        <div className="mt-3 flex flex-1 flex-col gap-1">
           <div className="flex items-center justify-between text-xs text-gray-500">
             <span>{dayjs('2025-12-31').format('MM/DD')} 목표</span>
             <span>
@@ -97,6 +106,10 @@ export default function DetailView() {
             className="h-3 w-full appearance-none rounded-md bg-gray-200"
           ></progress>
         </div>
+      </div>
+
+      <div className="my-8 h-3 w-full bg-gray-100" />
+      <div className="mb-40 flex flex-col gap-2 px-4 py-0">
         <div className="flex flex-col gap-3">
           {list.map((list) => {
             const diffCount = dayjs(list.dailyGoalDate).diff(dayjs(), 'day');
@@ -114,28 +127,19 @@ export default function DetailView() {
                 <div className="flex flex-col gap-3">
                   {list.items.map((item) => {
                     return (
-                      <div
+                      <DailyCard
                         key={item.id}
-                        className="flex items-center gap-3 rounded-md bg-gray-100 px-3 py-2 text-sm active:bg-gray-200 data-[complete=true]:opacity-50"
-                        data-complete={item.isCompleted}
+                        isCompleted={item.isCompleted}
+                        title={item.title}
                         onClick={() => {
                           // navigate(`/daily-goal/${item.id}`);
                         }}
-                      >
-                        <button
-                          className="flex size-8 items-center justify-center rounded-full border border-gray-300 active:bg-gray-200"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleTimelineItemComplete(list.dailyGoalDate, item.id);
-                          }}
-                        >
-                          {item.isCompleted ? <Check className="stroke-width-1.5" /> : null}
-                        </button>
-
-                        {item.title}
-                      </div>
+                      />
                     );
                   })}
+                  <Button variant="soft">
+                    <Plus /> 직접 추가
+                  </Button>
                 </div>
               </div>
             );

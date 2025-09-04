@@ -27,16 +27,6 @@ export default function Navigation() {
         <span className="text-xs font-medium">홈</span>
       </Link>
       <Link
-        to="/ai-assistant"
-        className={classNames(
-          'text-decoration-none flex flex-col items-center text-base font-medium text-gray-500',
-          isActive('/ai-assistant') && 'text-primary-500',
-        )}
-      >
-        <Bot size={24} />
-        <span className="text-xs font-medium">AI 비서</span>
-      </Link>
-      <Link
         to="/goal"
         className={classNames(
           'text-decoration-none flex flex-col items-center text-base font-medium text-gray-500',
@@ -45,6 +35,16 @@ export default function Navigation() {
       >
         <Goal size={24} />
         <span className="text-xs font-medium">목표</span>
+      </Link>
+      <Link
+        to="/ai-assistant"
+        className={classNames(
+          'text-decoration-none flex flex-col items-center text-base font-medium text-gray-500',
+          isActive('/ai-assistant') && 'text-primary-500',
+        )}
+      >
+        <Bot size={24} />
+        <span className="text-xs font-medium">AI 비서</span>
       </Link>
       <Link
         to="/mypage"
