@@ -1,66 +1,60 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, matchPath, useLocation } from 'react-router-dom';
 
 import classNames from 'classnames';
+import { Bot, Goal, Home, User } from 'lucide-react';
 
 export default function Navigation() {
   const location = useLocation();
   const { pathname } = location;
-  // const domain = pathname.split('/')[1];
-  // const subDomain = pathname.split('/')[2];
 
   const isActive = (path: string) => {
     if (path === '/') {
       return pathname === path;
     } else {
-      return pathname.includes(path);
+      return matchPath({ path, end: false }, pathname);
     }
   };
   return (
-    <nav className="fixed right-0 bottom-0 left-0 z-99 flex justify-between border-t border-gray-300 bg-white p-4">
+    <nav className="fixed right-0 bottom-0 left-0 z-99 grid grid-cols-4 px-5 py-3 backdrop-blur-lg">
       <Link
         to="/"
         className={classNames(
-          'text-decoration-none text-base font-medium text-gray-500',
-          isActive('/') && 'text-primary-500 font-semibold',
+          'text-decoration-none flex flex-col items-center text-base font-medium text-gray-500',
+          isActive('/') && 'text-primary-500',
         )}
       >
-        Home
-      </Link>
-      <Link
-        to="/goal"
-        className={classNames(
-          'text-decoration-none text-base font-medium text-gray-500',
-          isActive('/goal') && 'text-primary-500 font-semibold',
-        )}
-      >
-        Goal
+        <Home size={24} />
+        <span className="text-xs font-medium">홈</span>
       </Link>
       <Link
         to="/ai-assistant"
         className={classNames(
-          'text-decoration-none text-base font-medium text-gray-500',
-          isActive('/ai-assistant') && 'text-primary-500 font-semibold',
+          'text-decoration-none flex flex-col items-center text-base font-medium text-gray-500',
+          isActive('/ai-assistant') && 'text-primary-500',
         )}
       >
-        Ai Assistant
+        <Bot size={24} />
+        <span className="text-xs font-medium">AI 비서</span>
       </Link>
       <Link
-        to="/login"
+        to="/goal"
         className={classNames(
-          'text-decoration-none text-base font-medium text-gray-500',
-          isActive('/login') && 'text-primary-500 font-semibold',
+          'text-decoration-none flex flex-col items-center text-base font-medium text-gray-500',
+          isActive('/goal') && 'text-primary-500',
         )}
       >
-        Login
+        <Goal size={24} />
+        <span className="text-xs font-medium">목표</span>
       </Link>
       <Link
         to="/mypage"
         className={classNames(
-          'text-decoration-none text-base font-medium text-gray-500',
-          isActive('/mypage') && 'text-primary-500 font-semibold',
+          'text-decoration-none flex flex-col items-center text-base font-medium text-gray-500',
+          isActive('/mypage') && 'text-primary-500',
         )}
       >
-        Mypage
+        <User size={24} />
+        <span className="text-xs font-medium">내 정보</span>
       </Link>
     </nav>
   );

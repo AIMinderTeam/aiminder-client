@@ -24,6 +24,54 @@ const GoalList = [
     title: 'AI 비서 출시',
     endDate: '2025-11-01',
   },
+  {
+    id: 2,
+    status: GoalStatus.PENDING,
+    title: 'AI 비서 출시',
+    endDate: '2025-11-01',
+  },
+  {
+    id: 2,
+    status: GoalStatus.PENDING,
+    title: 'AI 비서 출시',
+    endDate: '2025-11-01',
+  },
+  {
+    id: 2,
+    status: GoalStatus.PENDING,
+    title: 'AI 비서 출시',
+    endDate: '2025-11-01',
+  },
+  {
+    id: 2,
+    status: GoalStatus.PENDING,
+    title: 'AI 비서 출시',
+    endDate: '2025-11-01',
+  },
+  {
+    id: 2,
+    status: GoalStatus.PENDING,
+    title: 'AI 비서 출시',
+    endDate: '2025-11-01',
+  },
+  {
+    id: 2,
+    status: GoalStatus.PENDING,
+    title: 'AI 비서 출시',
+    endDate: '2025-11-01',
+  },
+  {
+    id: 2,
+    status: GoalStatus.PENDING,
+    title: 'AI 비서 출시',
+    endDate: '2025-11-01',
+  },
+  {
+    id: 2,
+    status: GoalStatus.PENDING,
+    title: 'AI 비서 출시',
+    endDate: '2025-11-01',
+  },
 ];
 
 export default function Goal() {
@@ -78,7 +126,7 @@ export default function Goal() {
       <div className="flex flex-col gap-2">
         {GoalList.map((goal) => (
           <div
-            className="flex gap-2 border-b border-gray-200 py-2"
+            className="flex gap-2 border-b border-gray-200 bg-gray-100 py-2"
             key={goal.id}
             onClick={() => {
               navigate(`/goal/${goal.id}`);
