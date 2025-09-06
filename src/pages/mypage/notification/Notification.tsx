@@ -4,12 +4,6 @@ import { Bell, CheckSquare, Heart, MessageSquare, Settings } from 'lucide-react'
 export default function Notification() {
   return (
     <section className="min-h-screen bg-gray-50">
-      {/* 헤더 */}
-      <div className="border-b border-gray-200 bg-white px-4 py-4">
-        <h1 className="text-xl font-semibold text-gray-900">알림 설정</h1>
-        <p className="mt-1 text-sm text-gray-500">원하는 알림을 선택하여 관리하세요</p>
-      </div>
-
       <div className="px-4 py-4">
         {/* 전체 알림 */}
         <div className="mb-6">

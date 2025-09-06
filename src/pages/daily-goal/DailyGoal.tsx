@@ -60,22 +60,6 @@ export default function DailyGoal() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 헤더 */}
-      <div className="border-b border-gray-200 bg-white px-4 py-4">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-200 hover:bg-gray-100"
-          >
-            <ArrowLeft size={20} className="text-gray-600" />
-          </button>
-          <div>
-            <h1 className="text-lg font-semibold text-gray-900">일일 목표</h1>
-            <p className="text-sm text-gray-500">세부 목표 관리</p>
-          </div>
-        </div>
-      </div>
-
       <div className="space-y-6 px-4 py-6">
         {/* 목표 정보 카드 */}
         <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">

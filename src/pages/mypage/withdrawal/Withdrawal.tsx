@@ -29,22 +29,6 @@ export default function Withdrawal() {
 
   return (
     <section className="min-h-screen bg-gray-50">
-      {/* 헤더 */}
-      <div className="border-b border-gray-200 bg-white px-4 py-4">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-gray-100"
-          >
-            <ArrowLeft className="h-5 w-5 text-gray-600" />
-          </button>
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900">회원탈퇴</h1>
-            <p className="mt-1 text-sm text-gray-500">계정을 영구적으로 삭제합니다</p>
-          </div>
-        </div>
-      </div>
-
       <div className="px-4 py-6">
         {step === 1 && (
           <>

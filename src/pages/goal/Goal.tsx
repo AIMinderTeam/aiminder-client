@@ -147,12 +147,6 @@ export default function Goal() {
 
   return (
     <section className="min-h-screen bg-gray-50">
-      {/* 헤더 */}
-      <div className="border-b border-gray-200 bg-white px-4 py-4">
-        <h1 className="text-xl font-semibold text-gray-900">목표 관리</h1>
-        <p className="mt-1 text-sm text-gray-500">나의 목표를 확인하고 관리해보세요</p>
-      </div>
-
       <div className="px-4 py-4">
         {/* 목표 생성 버튼들 */}
         <div className="mb-6 grid grid-cols-2 gap-3">
