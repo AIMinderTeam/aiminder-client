@@ -151,11 +151,11 @@ export default function Goal() {
         {/* 목표 생성 버튼들 */}
         <div className="mb-6 grid grid-cols-2 gap-3">
           <button
-            className="bg-primary-500 hover:bg-primary-600 flex items-center gap-3 rounded-xl p-4 text-white shadow-sm transition-all duration-200 hover:shadow-md"
+            className="bg-primary-500 hover:bg-primary-600 flex items-center gap-3 rounded-xl px-3 py-4 text-white shadow-sm transition-all duration-200 hover:shadow-md"
             onClick={() => navigate('/ai-assistant/new')}
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
-              <Sparkles className="h-5 w-5" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20">
+              <Sparkles size={20} />
             </div>
             <div className="text-left">
               <h3 className="font-semibold">AI 목표 생성</h3>
@@ -164,11 +164,11 @@ export default function Goal() {
           </button>
 
           <button
-            className="bg-secondary-500 hover:bg-secondary-600 flex items-center gap-3 rounded-xl p-4 text-white shadow-sm transition-all duration-200 hover:shadow-md"
+            className="bg-secondary-500 hover:bg-secondary-600 flex items-center gap-3 rounded-xl px-3 py-4 text-white shadow-sm transition-all duration-200 hover:shadow-md"
             onClick={() => navigate('/ai-assistant/new/directly')}
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/20">
-              <Target className="h-5 w-5" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20">
+              <Target size={20} />
             </div>
             <div className="text-left">
               <h3 className="font-semibold">직접 목표 생성</h3>

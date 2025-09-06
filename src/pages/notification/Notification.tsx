@@ -1,26 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import Badge from '@/shared/components/ui/badge';
-import { Button } from '@/shared/components/ui/button';
+import classNames from 'classnames';
 import dayjs from 'dayjs';
-import {
-  Archive,
-  Bell,
-  CheckCircle2,
-  ChevronRight,
-  Clock,
-  ListTodo,
-  MessageSquare,
-  MoreVertical,
-  Quote,
-  Sparkles,
-  Star,
-  Target,
-  Trash2,
-  Trophy,
-} from 'lucide-react';
+import { Bell, ListTodo, Quote, Sparkles, Trophy } from 'lucide-react';
 
 export default function Notification() {
+  const navigate = useNavigate();
+
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -30,6 +17,7 @@ export default function Notification() {
       time: dayjs().subtract(2, 'hour'),
       isRead: false,
       priority: 'high',
+      linkId: null,
     },
     {
       id: 2,
@@ -39,6 +27,7 @@ export default function Notification() {
       time: dayjs().subtract(4, 'hour'),
       isRead: false,
       priority: 'medium',
+      linkId: null,
     },
     {
       id: 3,
@@ -48,6 +37,7 @@ export default function Notification() {
       time: dayjs().subtract(6, 'hour'),
       isRead: true,
       priority: 'high',
+      linkId: 1,
     },
     {
       id: 4,
@@ -57,6 +47,7 @@ export default function Notification() {
       time: dayjs().subtract(1, 'day'),
       isRead: true,
       priority: 'high',
+      linkId: null,
     },
   ]);
 
@@ -77,25 +68,8 @@ export default function Notification() {
     }
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high':
-        return 'bg-red-100 text-red-700 border-red-200';
-      case 'medium':
-        return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-      case 'low':
-        return 'bg-gray-100 text-gray-700 border-gray-200';
-      default:
-        return 'bg-gray-100 text-gray-700 border-gray-200';
-    }
-  };
-
   const markAsRead = (id: number) => {
     setNotifications((prev) => prev.map((notif) => (notif.id === id ? { ...notif, isRead: true } : notif)));
-  };
-
-  const deleteNotification = (id: number) => {
-    setNotifications((prev) => prev.filter((notif) => notif.id !== id));
   };
 
   const unreadCount = notifications.filter((n) => !n.isRead).length;
@@ -103,16 +77,6 @@ export default function Notification() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* 헤더 */}
-      <div className="border-b border-gray-100 bg-white px-4 py-3">
-        <div className="flex items-center justify-between">
-          <h1 className="text-lg font-bold text-gray-900">알림</h1>
-          {unreadCount > 0 && (
-            <span className="bg-primary-500 rounded-full px-2 py-1 text-xs text-white">{unreadCount}</span>
-          )}
-        </div>
-      </div>
-
       {/* 알림 목록 */}
       {displayNotifications.length > 0 ? (
         <div className="divide-y divide-gray-100">
@@ -122,27 +86,33 @@ export default function Notification() {
               className={`px-4 py-3 transition-colors duration-200 ${
                 !notification.isRead ? 'bg-blue-50' : 'hover:bg-gray-50'
               }`}
-              onClick={() => markAsRead(notification.id)}
+              onClick={() => {
+                markAsRead(notification.id);
+                if (notification.linkId !== null) {
+                  navigate(`/ai-assistant/${notification.linkId}`);
+                }
+              }}
             >
               <div className="flex items-start gap-3">
-                <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
+                <div className="relative mt-0.5 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
                   {getNotificationIcon(notification.type)}
+                  {!notification.isRead && (
+                    <div className="bg-primary-500 absolute top-0 right-0 h-2 w-2 rounded-full"></div>
+                  )}
                 </div>
 
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-medium text-gray-900">{notification.title}</p>
-                      <p className="mt-1 line-clamp-2 text-sm text-gray-600">
-                        {Array.isArray(notification.content) ? notification.content.join(', ') : notification.content}
-                      </p>
-                    </div>
-
-                    <div className="flex flex-col items-end gap-1">
-                      <span className="text-xs text-gray-400">{notification.time.format('MM/DD')}</span>
-                      {!notification.isRead && <div className="bg-primary-500 h-2 w-2 rounded-full"></div>}
-                    </div>
+                <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <div className="flex flex-1 items-center justify-between gap-2">
+                    <p className="truncate text-sm font-medium text-gray-900">{notification.title}</p>
+                    <span className="text-xs text-gray-400">{notification.time.format('MM.DD HH:mm A')}</span>
                   </div>
+                  <p
+                    className={classNames('mt-1 line-clamp-2 text-sm text-gray-600', {
+                      underline: notification.linkId !== null,
+                    })}
+                  >
+                    {Array.isArray(notification.content) ? notification.content.join(', ') : notification.content}
+                  </p>
                 </div>
               </div>
             </div>
