@@ -6,10 +6,19 @@ import testImage2 from '@/assets/test/image2.png';
 import testImage3 from '@/assets/test/image3.png';
 import testImage4 from '@/assets/test/image4.png';
 import testImage5 from '@/assets/test/image5.png';
-import Badge, { type BadgeVariant } from '@/shared/components/ui/badge';
-import classNames from 'classnames';
+import { type BadgeVariant } from '@/shared/components/ui/badge';
 import dayjs from 'dayjs';
-import { AlertTriangle, CalendarCheck, CheckCircle, Clock, Filter, Play, Plus, Sparkles, Target } from 'lucide-react';
+import {
+  AlertTriangle,
+  Calendar,
+  CalendarCheck,
+  CheckCircle,
+  Clock,
+  Play,
+  Sparkles,
+  Target,
+  Trophy,
+} from 'lucide-react';
 
 const GoalStatus = {
   PENDING: '미완료',
@@ -40,6 +49,12 @@ const GoalList = [
     endDate: '2025-12-31',
     image: testImage1,
     progress: 0,
+    streakDays: 0,
+    completedMilestones: 0,
+    totalMilestones: 5,
+    dailyGoalCount: 3,
+    completedToday: 0,
+    nextMilestone: '1kg 감량',
   },
   {
     id: 2,
@@ -48,6 +63,12 @@ const GoalList = [
     endDate: '2025-11-01',
     image: testImage2,
     progress: 30,
+    streakDays: 2,
+    completedMilestones: 1,
+    totalMilestones: 4,
+    dailyGoalCount: 2,
+    completedToday: 1,
+    nextMilestone: '한 달 독서',
   },
   {
     id: 3,
@@ -56,6 +77,12 @@ const GoalList = [
     endDate: '2025-11-01',
     image: testImage3,
     progress: 65,
+    streakDays: 7,
+    completedMilestones: 3,
+    totalMilestones: 5,
+    dailyGoalCount: 4,
+    completedToday: 3,
+    nextMilestone: '베타 테스트',
   },
   {
     id: 4,
@@ -64,6 +91,12 @@ const GoalList = [
     endDate: '2025-11-01',
     image: testImage4,
     progress: 0,
+    streakDays: 0,
+    completedMilestones: 0,
+    totalMilestones: 3,
+    dailyGoalCount: 2,
+    completedToday: 0,
+    nextMilestone: '첫 운동',
   },
   {
     id: 5,
@@ -72,6 +105,12 @@ const GoalList = [
     endDate: '2025-11-01',
     image: testImage2,
     progress: 45,
+    streakDays: 5,
+    completedMilestones: 2,
+    totalMilestones: 6,
+    dailyGoalCount: 3,
+    completedToday: 2,
+    nextMilestone: '기초 문법 완성',
   },
   {
     id: 6,
@@ -80,6 +119,12 @@ const GoalList = [
     endDate: '2025-11-01',
     image: testImage5,
     progress: 80,
+    streakDays: 12,
+    completedMilestones: 4,
+    totalMilestones: 5,
+    dailyGoalCount: 3,
+    completedToday: 3,
+    nextMilestone: '최종 배포',
   },
   {
     id: 7,
@@ -88,6 +133,12 @@ const GoalList = [
     endDate: '2025-11-01',
     image: testImage1,
     progress: 100,
+    streakDays: 15,
+    completedMilestones: 5,
+    totalMilestones: 5,
+    dailyGoalCount: 2,
+    completedToday: 2,
+    nextMilestone: '완료',
   },
   {
     id: 8,
@@ -96,6 +147,12 @@ const GoalList = [
     endDate: '2025-11-01',
     image: testImage2,
     progress: 0,
+    streakDays: 0,
+    completedMilestones: 0,
+    totalMilestones: 4,
+    dailyGoalCount: 2,
+    completedToday: 0,
+    nextMilestone: '기초 학습',
   },
   {
     id: 9,
@@ -104,6 +161,12 @@ const GoalList = [
     endDate: '2025-11-01',
     image: testImage3,
     progress: 100,
+    streakDays: 20,
+    completedMilestones: 4,
+    totalMilestones: 4,
+    dailyGoalCount: 3,
+    completedToday: 3,
+    nextMilestone: '완료',
   },
   {
     id: 10,
@@ -112,6 +175,12 @@ const GoalList = [
     endDate: '2025-11-01',
     image: testImage4,
     progress: 100,
+    streakDays: 30,
+    completedMilestones: 3,
+    totalMilestones: 3,
+    dailyGoalCount: 1,
+    completedToday: 1,
+    nextMilestone: '완료',
   },
   {
     id: 11,
@@ -120,6 +189,12 @@ const GoalList = [
     endDate: '2025-11-01',
     image: testImage5,
     progress: 25,
+    streakDays: 3,
+    completedMilestones: 1,
+    totalMilestones: 4,
+    dailyGoalCount: 2,
+    completedToday: 1,
+    nextMilestone: '취미 선택',
   },
   {
     id: 12,
@@ -128,6 +203,12 @@ const GoalList = [
     endDate: '2025-11-01',
     image: testImage2,
     progress: 15,
+    streakDays: 0,
+    completedMilestones: 0,
+    totalMilestones: 3,
+    dailyGoalCount: 2,
+    completedToday: 0,
+    nextMilestone: '여행지 선정',
   },
 ];
 
@@ -136,14 +217,6 @@ export default function Goal() {
   const navigate = useNavigate();
 
   const filteredGoals = goalStatus === '전체' ? GoalList : GoalList.filter((goal) => goal.status === goalStatus);
-
-  const statusCounts = {
-    전체: GoalList.length,
-    [GoalStatus.PENDING]: GoalList.filter((g) => g.status === GoalStatus.PENDING).length,
-    [GoalStatus.INPROGRESS]: GoalList.filter((g) => g.status === GoalStatus.INPROGRESS).length,
-    [GoalStatus.DELAYED]: GoalList.filter((g) => g.status === GoalStatus.DELAYED).length,
-    [GoalStatus.COMPLETED]: GoalList.filter((g) => g.status === GoalStatus.COMPLETED).length,
-  };
 
   return (
     <section className="min-h-screen bg-gray-50">
@@ -177,44 +250,6 @@ export default function Goal() {
           </button>
         </div>
 
-        {/* 필터 섹션 */}
-        <div className="mb-6">
-          <div className="mb-3 flex items-center gap-2">
-            <Filter className="h-4 w-4 text-gray-500" />
-            <span className="text-sm font-medium text-gray-700">상태별 필터</span>
-          </div>
-          <div className="flex gap-2 overflow-x-auto pb-2">
-            {['전체', GoalStatus.PENDING, GoalStatus.INPROGRESS, GoalStatus.DELAYED, GoalStatus.COMPLETED].map(
-              (status) => {
-                const Icon = status === '전체' ? Target : statusIcons[status as keyof typeof statusIcons];
-                return (
-                  <button
-                    key={status}
-                    onClick={() => setGoalStatus(status)}
-                    className={classNames(
-                      'flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200',
-                      goalStatus === status
-                        ? 'bg-primary-500 text-white shadow-sm'
-                        : 'border border-gray-200 bg-white text-gray-600 hover:border-gray-300',
-                    )}
-                  >
-                    <Icon className="h-4 w-4" />
-                    {status}
-                    <span
-                      className={classNames(
-                        'rounded-full px-2 py-0.5 text-xs',
-                        goalStatus === status ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500',
-                      )}
-                    >
-                      {statusCounts[status as keyof typeof statusCounts]}
-                    </span>
-                  </button>
-                );
-              },
-            )}
-          </div>
-        </div>
-
         {/* 목표 리스트 */}
         <div className="space-y-3">
           {filteredGoals.length === 0 ? (
@@ -231,7 +266,6 @@ export default function Goal() {
             </div>
           ) : (
             filteredGoals.map((goal) => {
-              const StatusIcon = statusIcons[goal.status];
               const daysLeft = dayjs(goal.endDate).diff(dayjs(), 'day');
 
               return (
@@ -241,17 +275,11 @@ export default function Goal() {
                   onClick={() => navigate(`/goal/${goal.id}`)}
                 >
                   <div className="flex items-center gap-4">
-                    <div className="relative">
-                      <img src={goal.image} alt="goal-image" className="h-16 w-16 rounded-xl object-cover" />
-                      <div className="absolute -top-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-white shadow-sm">
-                        <StatusIcon className="h-3 w-3 text-gray-600" />
-                      </div>
-                    </div>
+                    <img src={goal.image} alt="goal-image" className="size-20 rounded-xl object-cover" />
 
                     <div className="min-w-0 flex-1">
                       <div className="mb-1 flex items-center justify-between">
                         <h3 className="truncate font-semibold text-gray-900">{goal.title}</h3>
-                        <Badge variant={badgeVariant[goal.status]}>{goal.status}</Badge>
                       </div>
 
                       <div className="mb-2 flex items-center gap-2">
@@ -261,25 +289,34 @@ export default function Goal() {
                         </span>
                       </div>
 
-                      {/* 진행률 바 */}
-                      <div className="h-2 w-full rounded-full bg-gray-200">
-                        <div
-                          className={classNames(
-                            'h-2 rounded-full transition-all duration-300',
-                            goal.status === GoalStatus.COMPLETED
-                              ? 'bg-green-500'
-                              : goal.status === GoalStatus.DELAYED
-                                ? 'bg-red-500'
-                                : goal.status === GoalStatus.INPROGRESS
-                                  ? 'bg-blue-500'
-                                  : 'bg-gray-400',
-                          )}
-                          style={{ width: `${goal.progress}%` }}
-                        />
-                      </div>
-                      <div className="mt-1 flex items-center justify-between">
-                        <span className="text-xs text-gray-500">{goal.progress}% 완료</span>
-                        <span className="text-xs text-gray-400">{dayjs(goal.endDate).format('MM/DD')}</span>
+                      {/* 다층적 진행률 표시 */}
+                      <div className="space-y-2">
+                        {/* 마일스톤 진행률 바 */}
+                        {/* 목표 종료일 진행률 바 */}
+                        <div className="h-1 w-full rounded-full bg-gray-100">
+                          <div
+                            className="h-1 rounded-full bg-purple-400 transition-all duration-300"
+                            style={{ width: `${(goal.completedMilestones / goal.totalMilestones) * 100}%` }}
+                          />
+                        </div>
+
+                        {/* 추가 정보 섹션 */}
+                        <div className="flex items-center justify-between text-xs text-gray-500">
+                          <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-1">
+                              <Trophy className="h-3 w-3 text-purple-500" />
+                              <span>
+                                {goal.completedMilestones}/{goal.totalMilestones}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Calendar className="h-3 w-3" />
+                            <span>
+                              오늘 {goal.completedToday}/{goal.dailyGoalCount}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -289,14 +326,6 @@ export default function Goal() {
           )}
         </div>
       </div>
-
-      {/* 플로팅 액션 버튼 */}
-      <button
-        className="bg-primary-500 hover:bg-primary-600 fixed right-4 bottom-20 z-50 flex h-14 w-14 items-center justify-center rounded-full text-white shadow-lg transition-all duration-200 hover:scale-105"
-        onClick={() => navigate('/ai-assistant/new')}
-      >
-        <Plus className="h-6 w-6" />
-      </button>
     </section>
   );
 }
