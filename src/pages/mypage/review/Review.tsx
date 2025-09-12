@@ -115,14 +115,14 @@ export default function Review() {
         </div>
 
         {/* 안내사항 */}
-        <div className="rounded-lg bg-blue-50 p-4">
+        <div className="rounded-lg bg-gray-100 p-4">
           <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-500">
               <MessageSquare className="h-4 w-4 text-white" />
             </div>
             <div>
-              <span className="mb-1 font-medium text-blue-900">문의 안내</span>
-              <ul className="space-y-1 text-sm text-blue-700">
+              <span className="mb-1 font-medium text-gray-900">문의 안내</span>
+              <ul className="space-y-1 text-sm text-gray-700">
                 <li>• 문의하신 내용은 검토 후 1-2일 내에 답변드립니다</li>
                 <li>• 연락처를 남겨주시면 더 빠른 답변이 가능합니다</li>
                 <li>• 소중한 의견은 서비스 개선에 적극 반영하겠습니다</li>

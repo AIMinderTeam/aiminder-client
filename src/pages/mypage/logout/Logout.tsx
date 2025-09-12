@@ -24,14 +24,14 @@ export default function Logout() {
         {!isConfirming ? (
           <>
             {/* 로그아웃 안내 */}
-            <div className="mb-6 rounded-lg bg-orange-50 p-4">
-              <div className="flex items-start gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-orange-500">
+            <div className="bg-primary-50 mb-6 rounded-lg p-4">
+              <div className="flex gap-3">
+                <div className="bg-primary-500 flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
                   <LogOut className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <span className="mb-1 font-medium text-orange-900">로그아웃 안내</span>
-                  <p className="text-sm text-orange-700">로그아웃하면 현재 세션이 종료되고 다시 로그인해야 합니다.</p>
+                  <div className="text-primary-700 mb-1 font-medium">로그아웃 안내</div>
+                  <p className="text-primary-600 text-sm">로그아웃하면 현재 세션이 종료되고 다시 로그인해야 합니다.</p>
                 </div>
               </div>
             </div>
@@ -51,7 +51,14 @@ export default function Logout() {
             </div>
 
             {/* 로그아웃 버튼 */}
-            <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                onClick={() => navigate(-1)}
+                variant="soft"
+                className="w-full rounded-lg py-3 font-medium transition-all duration-200"
+              >
+                취소
+              </Button>
               <Button
                 onClick={() => setIsConfirming(true)}
                 className="flex w-full items-center justify-center gap-2 rounded-lg bg-orange-500 py-3 font-medium text-white transition-all duration-200 hover:bg-orange-600"
@@ -59,37 +66,38 @@ export default function Logout() {
                 <LogOut className="h-4 w-4" />
                 로그아웃
               </Button>
-
-              <Button
-                onClick={() => navigate(-1)}
-                variant="outline"
-                className="w-full rounded-lg py-3 font-medium transition-all duration-200"
-              >
-                취소
-              </Button>
             </div>
           </>
         ) : (
           <>
             {/* 확인 단계 */}
-            <div className="mb-6 rounded-lg bg-red-50 p-4">
+            <div className="bg-danger-50 mb-6 rounded-lg p-4">
               <div className="flex items-start gap-3">
-                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-500">
+                <div className="bg-danger-500 flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
                   <AlertTriangle className="h-4 w-4 text-white" />
                 </div>
                 <div>
-                  <span className="mb-1 font-medium text-red-900">정말 로그아웃하시겠습니까?</span>
-                  <p className="text-sm text-red-700">로그아웃하면 현재 진행 중인 작업이 저장되지 않을 수 있습니다.</p>
+                  <div className="text-danger-700 mb-1 font-medium">정말 로그아웃하시겠습니까?</div>
+                  <p className="text-danger-500 text-sm">
+                    로그아웃하면 현재 진행 중인 작업이 저장되지 않을 수 있습니다.
+                  </p>
                 </div>
               </div>
             </div>
 
             {/* 확인 버튼들 */}
-            <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                onClick={() => setIsConfirming(false)}
+                variant="soft"
+                className="w-full rounded-lg py-3 font-medium transition-all duration-200"
+              >
+                취소
+              </Button>
               <Button
                 onClick={handleLogout}
                 disabled={isLoggingOut}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-red-500 py-3 font-medium text-white transition-all duration-200 hover:bg-red-600"
+                className="bg-danger-500 flex w-full items-center justify-center gap-2 rounded-lg py-3 font-medium text-white transition-all duration-200 hover:bg-red-600"
               >
                 {isLoggingOut ? (
                   <>
@@ -103,34 +111,24 @@ export default function Logout() {
                   </>
                 )}
               </Button>
-
-              <Button
-                onClick={() => setIsConfirming(false)}
-                variant="outline"
-                className="w-full rounded-lg py-3 font-medium transition-all duration-200"
-              >
-                취소
-              </Button>
+            </div>
+            <div className="bg-secondary-50 mt-8 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <div className="bg-secondary-500 flex h-8 w-8 shrink-0 items-center justify-center rounded-full">
+                  <CheckCircle className="h-4 w-4 text-white" />
+                </div>
+                <div>
+                  <div className="text-secondary-700 mb-1 font-medium">로그아웃 후</div>
+                  <ul className="text-secondary-700 space-y-1 text-sm">
+                    <li>• 언제든지 다시 로그인할 수 있습니다</li>
+                    <li>• 저장된 데이터는 그대로 유지됩니다</li>
+                    <li>• 다른 기기에서 로그인할 수 있습니다</li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </>
         )}
-
-        {/* 도움말 */}
-        <div className="mt-8 rounded-lg bg-blue-50 p-4">
-          <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500">
-              <CheckCircle className="h-4 w-4 text-white" />
-            </div>
-            <div>
-              <span className="mb-1 font-medium text-blue-900">로그아웃 후</span>
-              <ul className="space-y-1 text-sm text-blue-700">
-                <li>• 언제든지 다시 로그인할 수 있습니다</li>
-                <li>• 저장된 데이터는 그대로 유지됩니다</li>
-                <li>• 다른 기기에서 로그인할 수 있습니다</li>
-              </ul>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

@@ -78,14 +78,14 @@ export default function Notification() {
         </div>
 
         {/* 도움말 섹션 */}
-        <div className="mt-8 rounded-lg bg-blue-50 p-4">
+        <div className="mt-8 rounded-lg bg-gray-100 p-4">
           <div className="flex items-start gap-3">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-500">
               <Bell className="h-4 w-4 text-white" />
             </div>
             <div>
-              <span className="mb-1 font-medium text-blue-900">알림 설정 팁</span>
-              <p className="text-sm text-blue-700">
+              <span className="mb-1 font-medium text-gray-900">알림 설정 팁</span>
+              <p className="text-sm text-gray-700">
                 알림을 너무 자주 받으면 피로감을 느낄 수 있습니다. 중요한 알림만 선택하여 효과적으로 목표를
                 달성해보세요.
               </p>
