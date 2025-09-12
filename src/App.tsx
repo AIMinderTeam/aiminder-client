@@ -32,12 +32,7 @@ function App() {
       children: [
         {
           path: '',
-          element: (
-            <GoalPage />
-            // <GoalLayout>
-            //   <Goal />
-            // </GoalLayout>
-          ),
+          element: <GoalPage />,
         },
         {
           path: ':goalId',

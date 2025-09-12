@@ -9,9 +9,9 @@ interface PageLayoutProps {
 
 export default function PageLayout({ children, title, showNavigation = true }: PageLayoutProps) {
   return (
-    <main>
+    <main className="min-h-screen">
       <Header title={title} />
-      {children}
+      <div className={showNavigation ? 'pb-20' : ''}>{children}</div>
       {showNavigation && <Navigation />}
     </main>
   );

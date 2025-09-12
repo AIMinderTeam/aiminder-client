@@ -15,7 +15,7 @@ export default function Navigation() {
     }
   };
   return (
-    <nav className="fixed right-0 bottom-0 left-0 z-99 grid grid-cols-4 px-5 py-3 backdrop-blur-lg">
+    <nav className="pb-safe fixed right-0 bottom-0 left-0 z-99 grid grid-cols-4 bg-white/90 px-5 py-3 backdrop-blur-lg">
       <Link
         to="/"
         className={classNames(

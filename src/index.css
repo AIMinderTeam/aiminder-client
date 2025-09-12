@@ -53,6 +53,9 @@
   --point-olive: #cdcb87;
   --point-teal: #30727e;
   --point-cream: #fdf0dd;
+
+  /* Navigation bar height for consistent spacing */
+  --navigation-height: 80px;
 }
 
 body {
@@ -64,6 +67,25 @@ body {
   max-height: 100dvh;
 
   line-height: 1;
+}
+
+/* Safe area support for mobile devices */
+@supports (padding: max(0px)) {
+  .pb-safe {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+
+  .pt-safe {
+    padding-top: max(12px, env(safe-area-inset-top));
+  }
+
+  .pl-safe {
+    padding-left: max(12px, env(safe-area-inset-left));
+  }
+
+  .pr-safe {
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
 }
 
 h1,
@@ -115,4 +137,7 @@ progress::-webkit-progress-bar {
   --color-point-olive: #cdcb87;
   --color-point-teal: #30727e;
   --color-point-cream: #fdf0dd;
+
+  /* Navigation bar height for consistent spacing */
+  --color-navigation-height: 80px;
 }
