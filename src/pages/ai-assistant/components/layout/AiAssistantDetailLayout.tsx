@@ -1,11 +1,9 @@
-import Header from '@/shared/components/layout/header';
+import PageLayout from '@/shared/components/layout/PageLayout';
 
 export default function AiAssistantDetailLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main>
-      <Header title="AI 목표 생성" />
-
+    <PageLayout title="AI 목표 생성" showNavigation={false}>
       {children}
-    </main>
+    </PageLayout>
   );
 }

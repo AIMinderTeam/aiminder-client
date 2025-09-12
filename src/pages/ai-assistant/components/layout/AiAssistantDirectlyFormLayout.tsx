@@ -1,10 +1,9 @@
-import Header from '@/shared/components/layout/header';
+import PageLayout from '@/shared/components/layout/PageLayout';
 
 export default function AiAssistantDirectlyFormLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main>
-      <Header title="직접 목표 생성" />
+    <PageLayout title="직접 목표 생성" showNavigation={false}>
       {children}
-    </main>
+    </PageLayout>
   );
 }

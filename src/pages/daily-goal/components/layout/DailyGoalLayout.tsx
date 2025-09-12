@@ -1,11 +1,9 @@
-import Header from '@/shared/components/layout/header';
+import PageLayout from '@/shared/components/layout/PageLayout';
 
 export default function DailyGoalLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main>
-      <Header title="일일 목표" />
-
+    <PageLayout title="일일 목표" showNavigation={false}>
       {children}
-    </main>
+    </PageLayout>
   );
 }

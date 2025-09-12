@@ -1,14 +1,5 @@
-import Header from '@/shared/components/layout/header';
-import Navigation from '@/shared/components/layout/navigation';
+import PageLayout from '@/shared/components/layout/PageLayout';
 
 export default function GoalLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <main>
-      <Header title="목표" />
-
-      {children}
-
-      <Navigation />
-    </main>
-  );
+  return <PageLayout title="목표">{children}</PageLayout>;
 }
